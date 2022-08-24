@@ -2,9 +2,11 @@ part of timetable;
 
 class Timetable extends StatefulWidget {
   const Timetable({
+    this.timeBlocks = const [],
     this.scrollController,
     this.startHour = 0,
     this.endHour = 24,
+    this.blockWidth = 50,
     Key? key,
   }) : super(key: key);
 
@@ -13,6 +15,12 @@ class Timetable extends StatefulWidget {
 
   /// Hour at which the timetable ends.
   final int endHour;
+
+  /// The time blocks that will be displayed in the timetable.
+  final List<TimeBlock> timeBlocks;
+
+  /// The width of the block if there is no child
+  final double blockWidth;
 
   /// The scroll controller to control the scrolling of the timetable.
   final ScrollController? scrollController;
@@ -48,6 +56,32 @@ class _TimetableState extends State<Timetable> {
           Table(
             startHour: widget.startHour,
             endHour: widget.endHour,
+          ),
+          Container(
+            margin: const EdgeInsets.only(left: 45),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: IntrinsicHeight(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    for (var block in widget.timeBlocks) ...[
+                      Block(
+                        start: block.start,
+                        end: block.end,
+                        startHour: widget.startHour,
+                        blockWidth: widget.blockWidth,
+                        child: block.child,
+                      )
+                    ],
+                    SizedBox(
+                      width: 15,
+                      height: 80 * (widget.endHour - widget.startHour) + 40,
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ),
         ],
       ),

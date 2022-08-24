@@ -22,7 +22,7 @@ class Table extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      '${(i).toString().padLeft(2, '0')}:00',
+                      '${i.toString().padLeft(2, '0')}:00',
                     ),
                     const SizedBox(
                       width: 5,
