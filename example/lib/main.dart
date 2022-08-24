@@ -10,6 +10,6 @@ class TimetableDemo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: Timetable());
+    return const Scaffold(body: Timetable());
   }
 }
