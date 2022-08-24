@@ -81,6 +81,7 @@ class _TimetableState extends State<Timetable> {
 
   @override
   Widget build(BuildContext context) {
+    var blocks = _collapseBlocks(widget.timeBlocks);
     return SingleChildScrollView(
       physics: widget.scrollPhysics ?? const BouncingScrollPhysics(),
       controller: _scrollController,
@@ -106,7 +107,7 @@ class _TimetableState extends State<Timetable> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     if (!widget.mergeBlocks && !widget.collapseBlocks) ...[
-                      for (var block in widget.timeBlocks) ...[
+                      for (var block in blocks) ...[
                         Block(
                           start: block.start,
                           end: block.end,
@@ -118,11 +119,11 @@ class _TimetableState extends State<Timetable> {
                         ),
                       ],
                     ] else if (widget.mergeBlocks) ...[
-                      for (var blocks
-                          in _mergeBlocksInColumns(widget.timeBlocks)) ...[
+                      for (var mergedBlocks
+                          in _mergeBlocksInColumns(blocks)) ...[
                         Stack(
                           children: [
-                            for (var block in blocks) ...[
+                            for (var block in mergedBlocks) ...[
                               Block(
                                 start: block.start,
                                 end: block.end,
@@ -135,7 +136,25 @@ class _TimetableState extends State<Timetable> {
                             ],
                           ],
                         ),
-                      ]
+                      ],
+                    ] else if (widget.collapseBlocks) ...[
+                      for (var groupedBlocks in _groupBlocksById(blocks)) ...[
+                        Stack(
+                          children: [
+                            for (var block in groupedBlocks) ...[
+                              Block(
+                                start: block.start,
+                                end: block.end,
+                                startHour: widget.startHour,
+                                hourHeight: widget.hourHeight,
+                                blockWidth: widget.blockWidth,
+                                blockColor: widget.blockColor,
+                                child: block.child,
+                              ),
+                            ],
+                          ],
+                        ),
+                      ],
                     ],
                     SizedBox(
                       width: widget.tablePaddingEnd,
@@ -150,6 +169,92 @@ class _TimetableState extends State<Timetable> {
         ],
       ),
     );
+  }
+
+  /// Copmbine blocks that have the same id and the same time.
+  List<TimeBlock> _collapseBlocks(List<TimeBlock> blocks) {
+    var newBlocks = <TimeBlock>[];
+    var groupedBlocks = <List<TimeBlock>>[];
+    // order blocks by id and collides with another block
+    for (var block in blocks) {
+      // check if the block is already in one of the grouped blocks
+      var found = false;
+      for (var groupedBlock in groupedBlocks) {
+        if (groupedBlock.first.id == block.id &&
+            groupedBlock.first.start == block.start &&
+            groupedBlock.first.end == block.end) {
+          groupedBlock.add(block);
+          found = true;
+          break;
+        }
+      }
+      if (!found) {
+        if (blocks
+            .where(
+              (b) =>
+                  b != block &&
+                  b.id == block.id &&
+                  b.start == block.start &&
+                  b.end == block.end,
+            )
+            .isNotEmpty) {
+          groupedBlocks.add([block]);
+        } else {
+          newBlocks.add(block);
+        }
+      }
+    }
+    // 8.10 8.40 8.55
+    //
+    for (var block in groupedBlocks) {
+      // combine the blocks into one block
+      // calculate the endtime of the combined block
+      var startMinute = block.first.start.minute + block.first.start.hour * 60;
+      var endMinute = block.first.end.minute + block.first.end.hour * 60;
+      var durationMinute = (endMinute - startMinute) * block.length;
+
+      var endTime = TimeOfDay(
+        hour: (startMinute + durationMinute) ~/ 60,
+        minute: (startMinute + durationMinute) % 60,
+      );
+      var newBlock = TimeBlock(
+        start: block.first.start,
+        end: endTime,
+        child: Column(
+          children: [
+            for (var b in block) ...[b.child ?? Container()],
+          ],
+        ),
+      );
+      newBlocks.add(newBlock);
+    }
+    return newBlocks;
+  }
+
+  List<List<TimeBlock>> _groupBlocksById(List<TimeBlock> blocks) {
+    var groupedBlocks = <List<TimeBlock>>[];
+    var defaultGroup = <TimeBlock>[];
+    for (var block in blocks) {
+      var found = false;
+      if (block.id == 0) {
+        defaultGroup.add(block);
+      } else {
+        for (var groupedBlock in groupedBlocks) {
+          if (groupedBlock.first.id == block.id) {
+            groupedBlock.add(block);
+            found = true;
+            break;
+          }
+        }
+        if (!found) {
+          groupedBlocks.add([block]);
+        }
+      }
+    }
+    for (var block in defaultGroup) {
+      groupedBlocks.add([block]);
+    }
+    return groupedBlocks;
   }
 
   List<List<TimeBlock>> _mergeBlocksInColumns(List<TimeBlock> blocks) {
