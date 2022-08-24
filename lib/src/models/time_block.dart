@@ -4,6 +4,7 @@ class TimeBlock {
   TimeBlock({
     required this.start,
     required this.end,
+    this.id = 0,
     this.child,
   }) : assert(
           start.hour <= end.hour ||
@@ -22,4 +23,17 @@ class TimeBlock {
   /// The child widget that will be displayed within the block.
   /// The size of the parent widget should dictate the size of the child.
   final Widget? child;
+
+  /// The identifier of the block that is used to collapse blocks in 1 column.
+  /// Leave empty or 0 if you do not want to collapse blocks.
+  final int id;
+
+  /// Check if two blocks overlap each other
+  bool collidesWith(TimeBlock block) {
+    var startMinute = start.hour * 60 + start.minute;
+    var endMinute = end.hour * 60 + end.minute;
+    var otherStartMinute = block.start.hour * 60 + block.start.minute;
+    var otherEndMinute = block.end.hour * 60 + block.end.minute;
+    return startMinute < otherEndMinute && endMinute > otherStartMinute;
+  }
 }

@@ -53,6 +53,8 @@ class _TimetableDemoState extends State<TimetableDemo> {
           endHour: 22,
           timeBlocks: blocks,
           scrollController: _scrollController,
+          tablePaddingStart: 0,
+          mergeBlocks: true,
         ),
       ),
     );

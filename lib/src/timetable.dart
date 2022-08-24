@@ -4,6 +4,7 @@ class Timetable extends StatefulWidget {
   const Timetable({
     this.timeBlocks = const [],
     this.scrollController,
+    this.scrollPhysics,
     this.startHour = 0,
     this.endHour = 24,
     this.blockWidth = 50,
@@ -12,6 +13,8 @@ class Timetable extends StatefulWidget {
     this.tablePaddingStart = 10,
     this.tablePaddingEnd = 15,
     this.theme = const TableTheme(),
+    this.mergeBlocks = false,
+    this.collapseBlocks = false,
     Key? key,
   }) : super(key: key);
 
@@ -45,6 +48,15 @@ class Timetable extends StatefulWidget {
   /// The scroll controller to control the scrolling of the timetable.
   final ScrollController? scrollController;
 
+  /// The scroll physics used for the SinglechildScrollView.
+  final ScrollPhysics? scrollPhysics;
+
+  /// Whether or not to merge blocks in 1 column that fit below eachother.
+  final bool mergeBlocks;
+
+  /// Whether or not to collapse blocks in 1 column if they have the same id.
+  final bool collapseBlocks;
+
   @override
   State<Timetable> createState() => _TimetableState();
 }
@@ -70,13 +82,14 @@ class _TimetableState extends State<Timetable> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      physics: const BouncingScrollPhysics(),
+      physics: widget.scrollPhysics ?? const BouncingScrollPhysics(),
       controller: _scrollController,
       child: Stack(
         children: [
           Table(
             startHour: widget.startHour,
             endHour: widget.endHour,
+            columnHeight: widget.hourHeight,
             theme: widget.theme,
           ),
           Container(
@@ -86,20 +99,43 @@ class _TimetableState extends State<Timetable> {
                   5,
             ),
             child: SingleChildScrollView(
+              physics: widget.scrollPhysics ?? const BouncingScrollPhysics(),
               scrollDirection: Axis.horizontal,
               child: IntrinsicHeight(
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    for (var block in widget.timeBlocks) ...[
-                      Block(
-                        start: block.start,
-                        end: block.end,
-                        startHour: widget.startHour,
-                        hourHeight: widget.hourHeight,
-                        blockWidth: widget.blockWidth,
-                        child: block.child,
-                      ),
+                    if (!widget.mergeBlocks && !widget.collapseBlocks) ...[
+                      for (var block in widget.timeBlocks) ...[
+                        Block(
+                          start: block.start,
+                          end: block.end,
+                          startHour: widget.startHour,
+                          hourHeight: widget.hourHeight,
+                          blockWidth: widget.blockWidth,
+                          blockColor: widget.blockColor,
+                          child: block.child,
+                        ),
+                      ],
+                    ] else if (widget.mergeBlocks) ...[
+                      for (var blocks
+                          in _mergeBlocksInColumns(widget.timeBlocks)) ...[
+                        Stack(
+                          children: [
+                            for (var block in blocks) ...[
+                              Block(
+                                start: block.start,
+                                end: block.end,
+                                startHour: widget.startHour,
+                                hourHeight: widget.hourHeight,
+                                blockWidth: widget.blockWidth,
+                                blockColor: widget.blockColor,
+                                child: block.child,
+                              ),
+                            ],
+                          ],
+                        ),
+                      ]
                     ],
                     SizedBox(
                       width: widget.tablePaddingEnd,
@@ -114,6 +150,27 @@ class _TimetableState extends State<Timetable> {
         ],
       ),
     );
+  }
+
+  List<List<TimeBlock>> _mergeBlocksInColumns(List<TimeBlock> blocks) {
+    var mergedBlocks = <List<TimeBlock>>[];
+    // try to put blocks in the same column if the time doesn´t collide
+    for (var block in blocks) {
+      var mergeIndex = 0;
+
+      for (var mergedBlock in mergedBlocks) {
+        if (!mergedBlock.any((b) => b.collidesWith(block))) {
+          mergedBlock.add(block);
+          break;
+        } else {
+          mergeIndex++;
+        }
+      }
+      if (mergedBlocks.length == mergeIndex) {
+        mergedBlocks.add([block]);
+      }
+    }
+    return mergedBlocks;
   }
 
   void _scrollToFirstBlock() {
@@ -134,7 +191,6 @@ class _TimetableState extends State<Timetable> {
     });
   }
 
-  /// Calculates the width of 22:22
   Size _calculateTableTextSize() {
     return (TextPainter(
       text: TextSpan(text: '22:22', style: widget.theme.timeStyle),
