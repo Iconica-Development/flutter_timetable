@@ -7,6 +7,11 @@ class Timetable extends StatefulWidget {
     this.startHour = 0,
     this.endHour = 24,
     this.blockWidth = 50,
+    this.blockColor = const Color(0x80FF0000),
+    this.hourHeight = 80,
+    this.tablePaddingStart = 10,
+    this.tablePaddingEnd = 15,
+    this.theme = const TableTheme(),
     Key? key,
   }) : super(key: key);
 
@@ -21,6 +26,21 @@ class Timetable extends StatefulWidget {
 
   /// The width of the block if there is no child
   final double blockWidth;
+
+  /// The color of the block if there is no child
+  final Color blockColor;
+
+  /// The heigh of one hour in the timetable.
+  final double hourHeight;
+
+  /// The padding between the table markings and the first block.
+  final double tablePaddingStart;
+
+  /// The padding between the last block and the end of the table.
+  final double tablePaddingEnd;
+
+  /// The theme of the timetable.
+  final TableTheme theme;
 
   /// The scroll controller to control the scrolling of the timetable.
   final ScrollController? scrollController;
@@ -57,9 +77,14 @@ class _TimetableState extends State<Timetable> {
           Table(
             startHour: widget.startHour,
             endHour: widget.endHour,
+            theme: widget.theme,
           ),
           Container(
-            margin: const EdgeInsets.only(left: 45),
+            margin: EdgeInsets.only(
+              left: _calculateTableTextSize().width +
+                  widget.tablePaddingStart +
+                  5,
+            ),
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: IntrinsicHeight(
@@ -71,14 +96,15 @@ class _TimetableState extends State<Timetable> {
                         start: block.start,
                         end: block.end,
                         startHour: widget.startHour,
+                        hourHeight: widget.hourHeight,
                         blockWidth: widget.blockWidth,
                         child: block.child,
-                      )
+                      ),
                     ],
-                    // TODO(anyone): 80 needs to be a calculated value
                     SizedBox(
-                      width: 15,
-                      height: 80 * (widget.endHour - widget.startHour) + 40,
+                      width: widget.tablePaddingEnd,
+                      height: widget.hourHeight *
+                          (widget.endHour - widget.startHour + 0.5),
                     ),
                   ],
                 ),
@@ -98,12 +124,24 @@ class _TimetableState extends State<Timetable> {
                     ? a
                     : b,
           );
-      var initialOffset = (80 * (widget.endHour - widget.startHour)) *
-          ((earliestStart.hour - widget.startHour) /
-              (widget.endHour - widget.startHour));
+      var initialOffset =
+          (widget.hourHeight * (widget.endHour - widget.startHour)) *
+              ((earliestStart.hour - widget.startHour) /
+                  (widget.endHour - widget.startHour));
       _scrollController.jumpTo(
         initialOffset,
       );
     });
+  }
+
+  /// Calculates the width of 22:22
+  Size _calculateTableTextSize() {
+    return (TextPainter(
+      text: TextSpan(text: '22:22', style: widget.theme.timeStyle),
+      maxLines: 1,
+      textScaleFactor: MediaQuery.of(context).textScaleFactor,
+      textDirection: TextDirection.ltr,
+    )..layout())
+        .size;
   }
 }

@@ -6,6 +6,8 @@ class Block extends StatelessWidget {
     required this.end,
     required this.startHour,
     required this.blockWidth,
+    required this.hourHeight,
+    this.blockColor = const Color(0x80FF0000),
     this.linePadding = 8,
     this.child,
     Key? key,
@@ -23,8 +25,14 @@ class Block extends StatelessWidget {
   /// The start hour of the timetable.
   final int startHour;
 
+  /// The heigh of one hour in the timetable.
+  final double hourHeight;
+
   /// The width of the block if there is no child
   final double blockWidth;
+
+  /// The color of the block if there is no child
+  final Color blockColor;
 
   /// The padding between the lines and the numbers
   final double linePadding;
@@ -33,7 +41,6 @@ class Block extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(
-        left: 10,
         top:
             (((start.hour - startHour) * 60) + start.minute) * sizePerMinute() +
                 linePadding,
@@ -46,13 +53,12 @@ class Block extends StatelessWidget {
                 (((end.hour - start.hour) * 60) + end.minute - start.minute) *
                     sizePerMinute(),
             width: blockWidth,
-            color: Colors.red.withOpacity(0.5),
+            color: blockColor,
           ),
     );
   }
 
   double sizePerMinute() {
-    // TODO(anyone): calculate this based on the size of the screen
-    return 80 / 60;
+    return hourHeight / 60;
   }
 }
