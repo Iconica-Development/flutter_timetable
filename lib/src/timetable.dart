@@ -36,6 +36,7 @@ class _TimetableState extends State<Timetable> {
   void initState() {
     super.initState();
     _scrollController = widget.scrollController ?? ScrollController();
+    _scrollToFirstBlock();
   }
 
   @override
@@ -74,6 +75,7 @@ class _TimetableState extends State<Timetable> {
                         child: block.child,
                       )
                     ],
+                    // TODO(anyone): 80 needs to be a calculated value
                     SizedBox(
                       width: 15,
                       height: 80 * (widget.endHour - widget.startHour) + 40,
@@ -86,5 +88,22 @@ class _TimetableState extends State<Timetable> {
         ],
       ),
     );
+  }
+
+  void _scrollToFirstBlock() {
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      var earliestStart = widget.timeBlocks.map((block) => block.start).reduce(
+            (a, b) =>
+                a.hour < b.hour || (a.hour == b.hour && a.minute < b.minute)
+                    ? a
+                    : b,
+          );
+      var initialOffset = (80 * (widget.endHour - widget.startHour)) *
+          ((earliestStart.hour - widget.startHour) /
+              (widget.endHour - widget.startHour));
+      _scrollController.jumpTo(
+        initialOffset,
+      );
+    });
   }
 }

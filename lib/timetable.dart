@@ -1,6 +1,7 @@
 library timetable;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 
 part 'src/timetable.dart';
 part 'src/table.dart';
