@@ -54,6 +54,12 @@ class _TimetableDemoState extends State<TimetableDemo> {
       child: Text('High Tea'),
       id: 10,
     ),
+    TimeBlock(
+      start: TimeOfDay(hour: 18, minute: 0),
+      end: TimeOfDay(hour: 18, minute: 15),
+      child: Text('High Tea'),
+      id: 0,
+    ),
   ];
 
   final List<TimeBlock> groupedBlocks = [
@@ -101,6 +107,12 @@ class _TimetableDemoState extends State<TimetableDemo> {
       end: TimeOfDay(hour: 18, minute: 15),
       child: Text('High Tea'),
       id: 10,
+    ),
+    TimeBlock(
+      start: TimeOfDay(hour: 18, minute: 0),
+      end: TimeOfDay(hour: 18, minute: 15),
+      child: Text('High Tea'),
+      id: 0,
     ),
   ];
 
