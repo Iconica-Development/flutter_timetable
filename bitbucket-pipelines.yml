@@ -1,0 +1,44 @@
+image: cirrusci/flutter
+
+pipelines:
+  pull-requests:
+    feature/*:
+      - step:
+         caches:
+          - gradle
+          - gradlewrapper
+          - flutter
+         name: Run analyzer & test
+         script:
+          - flutter pub get
+          - flutter format -o none --set-exit-if-changed .
+          - flutter analyze
+
+    develop:
+      - step:
+         caches:
+          - gradle
+          - gradlewrapper
+          - flutter
+         name: Run analyzer & test
+         script:
+          - flutter pub get
+          - flutter format -o none --set-exit-if-changed .
+          - flutter analyze
+
+    hotfix/*:
+      - step:
+         caches:
+          - gradle
+          - gradlewrapper
+          - flutter
+         name: Run analyzer & test
+         script:
+          - flutter pub get
+          - flutter format -o none --set-exit-if-changed .
+          - flutter analyze
+
+definitions:
+  caches:
+    gradlewrapper: ~/.gradle/wrapper
+    flutter: ~/.pub-cache
