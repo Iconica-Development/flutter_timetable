@@ -17,53 +17,6 @@ class _TimetableDemoState extends State<TimetableDemo> {
   final ScrollController _scrollController = ScrollController();
   final List<TimeBlock> blocks = [
     TimeBlock(
-      start: TimeOfDay(hour: 8, minute: 0),
-      end: TimeOfDay(hour: 9, minute: 0),
-      child: null,
-    ),
-    TimeBlock(
-      start: TimeOfDay(hour: 9, minute: 15),
-      end: TimeOfDay(hour: 10, minute: 0),
-      child: null,
-    ),
-    TimeBlock(
-      start: TimeOfDay(hour: 10, minute: 15),
-      end: TimeOfDay(hour: 11, minute: 0),
-      child: Container(color: Colors.purple, height: 300, width: 50),
-    ),
-    TimeBlock(
-      start: TimeOfDay(hour: 6, minute: 15),
-      end: TimeOfDay(hour: 7, minute: 0),
-      child: Container(color: Colors.blue, height: 300, width: 200),
-    ),
-    TimeBlock(
-      start: TimeOfDay(hour: 18, minute: 0),
-      end: TimeOfDay(hour: 18, minute: 15),
-      child: Text('High Tea'),
-      id: 10,
-    ),
-    TimeBlock(
-      start: TimeOfDay(hour: 18, minute: 0),
-      end: TimeOfDay(hour: 18, minute: 15),
-      child: Text('High Tea'),
-      id: 10,
-    ),
-    TimeBlock(
-      start: TimeOfDay(hour: 18, minute: 0),
-      end: TimeOfDay(hour: 18, minute: 15),
-      child: Text('High Tea'),
-      id: 10,
-    ),
-    TimeBlock(
-      start: TimeOfDay(hour: 18, minute: 0),
-      end: TimeOfDay(hour: 18, minute: 15),
-      child: Text('High Tea'),
-      id: 0,
-    ),
-  ];
-
-  final List<TimeBlock> groupedBlocks = [
-    TimeBlock(
       start: TimeOfDay(hour: 14, minute: 0),
       end: TimeOfDay(hour: 15, minute: 0),
       id: 0,
@@ -150,10 +103,11 @@ class _TimetableDemoState extends State<TimetableDemo> {
                 Timetable(
                   startHour: 3,
                   endHour: 22,
-                  timeBlocks: groupedBlocks,
+                  timeBlocks: blocks,
                   scrollController: _scrollController,
                   tablePaddingStart: 0,
                   collapseBlocks: true,
+                  mergeBlocks: false,
                 )
               ] else ...[
                 Timetable(
