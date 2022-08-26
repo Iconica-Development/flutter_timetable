@@ -1,6 +1,7 @@
-part of timetable;
+import 'package:flutter/material.dart';
 
 class TimeBlock {
+  /// The model used for a [Block] in a [TimeTable] which can contain a Widget.
   TimeBlock({
     required this.start,
     required this.end,

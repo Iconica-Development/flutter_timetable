@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:timetable/src/block_service.dart';
 import 'package:timetable/timetable.dart';
 
 void main() {
-  group('test collapseBlocks', () {
+  group('test combineBlocksWithId', () {
     test('new block creation success', () {
       //Arrange
       var blocks = [
@@ -25,7 +26,7 @@ void main() {
       ];
 
       //Act
-      var result = collapseBlocks(blocks);
+      var result = combineBlocksWithId(blocks);
 
       //Assert
       expect(result.length, 2);
@@ -51,7 +52,7 @@ void main() {
       ];
 
       //Act
-      var result = collapseBlocks(blocks);
+      var result = combineBlocksWithId(blocks);
 
       //Assert
       expect(result.length, 2);
