@@ -1,6 +1,7 @@
-part of timetable;
+import 'package:flutter/material.dart';
 
 class Block extends StatelessWidget {
+  /// The [Block] to create a Widget or container in a [TimeTable].
   const Block({
     required this.start,
     required this.end,
@@ -41,24 +42,28 @@ class Block extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(
-        top:
-            (((start.hour - startHour) * 60) + start.minute) * sizePerMinute() +
-                linePadding,
+        top: (((start.hour - startHour) * Duration.minutesPerHour) +
+                    start.minute) *
+                _sizePerMinute() +
+            linePadding,
       ),
-      height: (((end.hour - start.hour) * 60) + end.minute - start.minute) *
-          sizePerMinute(),
+      height: (((end.hour - start.hour) * Duration.minutesPerHour) +
+              end.minute -
+              start.minute) *
+          _sizePerMinute(),
       child: child ??
           Container(
-            height:
-                (((end.hour - start.hour) * 60) + end.minute - start.minute) *
-                    sizePerMinute(),
+            height: (((end.hour - start.hour) * Duration.minutesPerHour) +
+                    end.minute -
+                    start.minute) *
+                _sizePerMinute(),
             width: blockWidth,
             color: blockColor,
           ),
     );
   }
 
-  double sizePerMinute() {
-    return hourHeight / 60;
+  double _sizePerMinute() {
+    return hourHeight / Duration.minutesPerHour;
   }
 }

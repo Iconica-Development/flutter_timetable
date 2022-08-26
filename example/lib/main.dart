@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:timetable/timetable.dart';
 
 void main() {
-  runApp(MaterialApp(home: TimetableDemo()));
+  runApp(const MaterialApp(home: TimetableDemo()));
 }
 
 class TimetableDemo extends StatefulWidget {
@@ -17,54 +17,54 @@ class _TimetableDemoState extends State<TimetableDemo> {
   final ScrollController _scrollController = ScrollController();
   final List<TimeBlock> blocks = [
     TimeBlock(
-      start: TimeOfDay(hour: 14, minute: 0),
-      end: TimeOfDay(hour: 15, minute: 0),
+      start: const TimeOfDay(hour: 14, minute: 0),
+      end: const TimeOfDay(hour: 15, minute: 0),
       id: 0,
     ),
     TimeBlock(
-      start: TimeOfDay(hour: 8, minute: 0),
-      end: TimeOfDay(hour: 9, minute: 0),
+      start: const TimeOfDay(hour: 8, minute: 0),
+      end: const TimeOfDay(hour: 9, minute: 0),
       id: 1,
     ),
     TimeBlock(
-      start: TimeOfDay(hour: 9, minute: 15),
-      end: TimeOfDay(hour: 10, minute: 0),
+      start: const TimeOfDay(hour: 9, minute: 15),
+      end: const TimeOfDay(hour: 10, minute: 0),
       id: 1,
     ),
     TimeBlock(
-      start: TimeOfDay(hour: 10, minute: 15),
-      end: TimeOfDay(hour: 11, minute: 0),
+      start: const TimeOfDay(hour: 10, minute: 15),
+      end: const TimeOfDay(hour: 11, minute: 0),
       child: Container(color: Colors.purple, height: 300, width: 50),
       id: 2,
     ),
     TimeBlock(
-      start: TimeOfDay(hour: 6, minute: 15),
-      end: TimeOfDay(hour: 7, minute: 0),
+      start: const TimeOfDay(hour: 6, minute: 15),
+      end: const TimeOfDay(hour: 7, minute: 0),
       child: Container(color: Colors.blue, height: 300, width: 200),
       id: 2,
     ),
     TimeBlock(
-      start: TimeOfDay(hour: 18, minute: 0),
-      end: TimeOfDay(hour: 18, minute: 15),
-      child: Text('High Tea'),
+      start: const TimeOfDay(hour: 18, minute: 0),
+      end: const TimeOfDay(hour: 18, minute: 15),
+      child: const Text('High Tea'),
       id: 10,
     ),
     TimeBlock(
-      start: TimeOfDay(hour: 18, minute: 0),
-      end: TimeOfDay(hour: 18, minute: 15),
-      child: Text('High Tea'),
+      start: const TimeOfDay(hour: 18, minute: 0),
+      end: const TimeOfDay(hour: 18, minute: 15),
+      child: const Text('High Tea'),
       id: 10,
     ),
     TimeBlock(
-      start: TimeOfDay(hour: 18, minute: 0),
-      end: TimeOfDay(hour: 18, minute: 15),
-      child: Text('High Tea'),
+      start: const TimeOfDay(hour: 18, minute: 0),
+      end: const TimeOfDay(hour: 18, minute: 15),
+      child: const Text('High Tea'),
       id: 10,
     ),
     TimeBlock(
-      start: TimeOfDay(hour: 18, minute: 0),
-      end: TimeOfDay(hour: 18, minute: 15),
-      child: Text('High Tea'),
+      start: const TimeOfDay(hour: 18, minute: 0),
+      end: const TimeOfDay(hour: 18, minute: 15),
+      child: const Text('High Tea'),
       id: 0,
     ),
   ];
@@ -88,7 +88,7 @@ class _TimetableDemoState extends State<TimetableDemo> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Grouped'),
+                  const Text('Grouped'),
                   Switch(
                     value: _grouped,
                     onChanged: (value) {
@@ -106,7 +106,7 @@ class _TimetableDemoState extends State<TimetableDemo> {
                   timeBlocks: blocks,
                   scrollController: _scrollController,
                   tablePaddingStart: 0,
-                  collapseBlocks: true,
+                  combineBlocks: true,
                   mergeBlocks: false,
                 )
               ] else ...[
@@ -116,7 +116,7 @@ class _TimetableDemoState extends State<TimetableDemo> {
                   timeBlocks: blocks,
                   scrollController: _scrollController,
                   tablePaddingStart: 0,
-                  collapseBlocks: true,
+                  combineBlocks: true,
                   mergeBlocks: true,
                 ),
               ],

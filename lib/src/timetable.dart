@@ -1,6 +1,17 @@
-part of timetable;
+import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:timetable/src/block_service.dart';
+import 'package:timetable/src/models/table_theme.dart';
+import 'package:timetable/src/models/time_block.dart';
+import 'package:timetable/src/widgets/block.dart';
+import 'package:timetable/src/widgets/table.dart' as table;
 
 class Timetable extends StatefulWidget {
+  /// [Timetable] widget that displays a timetable with [TimeBlock]s.
+  /// The timetable automatically scrolls to the first item.
+  /// A [TableTheme] can be provided to customize the look of the timetable.
+  /// [mergeBlocks] and [combineBlocks] can be used to combine blocks
+  /// and merge columns of blocks when possible.
   const Timetable({
     this.timeBlocks = const [],
     this.scrollController,
@@ -14,7 +25,7 @@ class Timetable extends StatefulWidget {
     this.tablePaddingEnd = 15,
     this.theme = const TableTheme(),
     this.mergeBlocks = false,
-    this.collapseBlocks = true,
+    this.combineBlocks = true,
     Key? key,
   }) : super(key: key);
 
@@ -56,7 +67,7 @@ class Timetable extends StatefulWidget {
 
   /// Whether or not to collapse blocks in 1 column if they have the same id.
   /// If blocks have the same id and time they will be combined into one block.
-  final bool collapseBlocks;
+  final bool combineBlocks;
 
   @override
   State<Timetable> createState() => _TimetableState();
@@ -83,8 +94,8 @@ class _TimetableState extends State<Timetable> {
   @override
   Widget build(BuildContext context) {
     List<TimeBlock> blocks;
-    if (widget.collapseBlocks) {
-      blocks = collapseBlocks(widget.timeBlocks);
+    if (widget.combineBlocks) {
+      blocks = combineBlocksWithId(widget.timeBlocks);
     } else {
       blocks = widget.timeBlocks;
     }
@@ -93,17 +104,16 @@ class _TimetableState extends State<Timetable> {
       controller: _scrollController,
       child: Stack(
         children: [
-          Table(
+          table.Table(
             startHour: widget.startHour,
             endHour: widget.endHour,
-            columnHeight: widget.hourHeight,
+            hourHeight: widget.hourHeight,
+            tableOffset: _calculateTableStart(),
             theme: widget.theme,
           ),
           Container(
             margin: EdgeInsets.only(
-              left: _calculateTableTextSize().width +
-                  widget.tablePaddingStart +
-                  5,
+              left: _calculateTableStart(),
             ),
             child: SingleChildScrollView(
               physics: widget.scrollPhysics ?? const BouncingScrollPhysics(),
@@ -112,7 +122,7 @@ class _TimetableState extends State<Timetable> {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if (widget.mergeBlocks || widget.collapseBlocks) ...[
+                    if (widget.mergeBlocks || widget.combineBlocks) ...[
                       for (var orderedBlocks in (widget.mergeBlocks)
                           ? mergeBlocksInColumns(blocks)
                           : groupBlocksById(blocks)) ...[
@@ -132,7 +142,9 @@ class _TimetableState extends State<Timetable> {
                     SizedBox(
                       width: widget.tablePaddingEnd,
                       height: widget.hourHeight *
-                          (widget.endHour - widget.startHour + 0.5),
+                          (widget.endHour -
+                              widget.startHour +
+                              0.5), // empty halfhour at the end
                     ),
                   ],
                 ),
@@ -142,6 +154,12 @@ class _TimetableState extends State<Timetable> {
         ],
       ),
     );
+  }
+
+  double _calculateTableStart() {
+    return _calculateTableTextSize().width +
+        widget.tablePaddingStart +
+        widget.theme.tableTextOffset;
   }
 
   Widget _showBlock(TimeBlock block) {

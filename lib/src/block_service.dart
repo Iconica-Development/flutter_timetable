@@ -1,26 +1,19 @@
-part of timetable;
+import 'package:flutter/material.dart';
+import 'package:timetable/src/models/time_block.dart';
 
 /// Combine blocks that have the same id and the same time.
-List<TimeBlock> collapseBlocks(List<TimeBlock> blocks) {
+List<TimeBlock> combineBlocksWithId(List<TimeBlock> blocks) {
   var newBlocks = <TimeBlock>[];
   var groupedBlocks = <List<TimeBlock>>[];
-  // order blocks by id and collides with another block
   for (var block in blocks) {
-    // check if the block is already in one of the grouped blocks
     var found = false;
     if (block.id == 0) {
       newBlocks.add(block);
-      continue;
+      found = true;
+    } else {
+      found = _checkIfBlockWithIdExists(groupedBlocks, block);
     }
-    for (var groupedBlock in groupedBlocks) {
-      if (groupedBlock.first.id == block.id &&
-          groupedBlock.first.start == block.start &&
-          groupedBlock.first.end == block.end) {
-        groupedBlock.add(block);
-        found = true;
-        break;
-      }
-    }
+
     if (!found) {
       if (blocks
           .where(
@@ -38,16 +31,24 @@ List<TimeBlock> collapseBlocks(List<TimeBlock> blocks) {
     }
   }
 
+  _combineGroupedBlocks(groupedBlocks, newBlocks);
+  return newBlocks;
+}
+
+void _combineGroupedBlocks(
+  List<List<TimeBlock>> groupedBlocks,
+  List<TimeBlock> newBlocks,
+) {
   for (var block in groupedBlocks) {
-    // combine the blocks into one block
-    // calculate the endtime of the combined block
-    var startMinute = block.first.start.minute + block.first.start.hour * 60;
-    var endMinute = block.first.end.minute + block.first.end.hour * 60;
+    var startMinute = block.first.start.minute +
+        block.first.start.hour * Duration.minutesPerHour;
+    var endMinute =
+        block.first.end.minute + block.first.end.hour * Duration.minutesPerHour;
     var durationMinute = (endMinute - startMinute) * block.length;
 
     var endTime = TimeOfDay(
-      hour: (startMinute + durationMinute) ~/ 60,
-      minute: (startMinute + durationMinute) % 60,
+      hour: (startMinute + durationMinute) ~/ Duration.minutesPerHour,
+      minute: (startMinute + durationMinute) % Duration.minutesPerHour,
     );
     var newBlock = TimeBlock(
       start: block.first.start,
@@ -61,7 +62,21 @@ List<TimeBlock> collapseBlocks(List<TimeBlock> blocks) {
     );
     newBlocks.add(newBlock);
   }
-  return newBlocks;
+}
+
+bool _checkIfBlockWithIdExists(
+  List<List<TimeBlock>> groupedBlocks,
+  TimeBlock block,
+) {
+  for (var groupedBlock in groupedBlocks) {
+    if (groupedBlock.first.id == block.id &&
+        groupedBlock.first.start == block.start &&
+        groupedBlock.first.end == block.end) {
+      groupedBlock.add(block);
+      return true;
+    }
+  }
+  return false;
 }
 
 /// Group blocks with the same id together.
@@ -95,7 +110,6 @@ List<List<TimeBlock>> groupBlocksById(List<TimeBlock> blocks) {
 /// Nerge blocks that fit below eachother into one column.
 List<List<TimeBlock>> mergeBlocksInColumns(List<TimeBlock> blocks) {
   var mergedBlocks = <List<TimeBlock>>[];
-  // try to put blocks in the same column if the time doesn´t collide
   for (var block in blocks) {
     var mergeIndex = 0;
 
