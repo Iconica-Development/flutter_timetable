@@ -8,7 +8,10 @@ class TableTheme {
     this.lineHeight = 2,
     this.tableTextOffset = 5,
     this.lineDashFrequency = 25,
-    this.timeStyle = const TextStyle(),
+    this.timeStyle,
+    this.tablePaddingStart = 10,
+    this.tablePaddingEnd = 15,
+    this.blockPaddingBetween = 0,
   });
 
   /// The color of the lines.
@@ -24,5 +27,14 @@ class TableTheme {
   final double tableTextOffset;
 
   /// The style of the time text.
-  final TextStyle timeStyle;
+  final TextStyle? timeStyle;
+
+  /// The padding between the table markings and the first block.
+  final double tablePaddingStart;
+
+  /// The padding between the last block and the end of the table.
+  final double tablePaddingEnd;
+
+  /// The padding between two blocks.
+  final double blockPaddingBetween;
 }
