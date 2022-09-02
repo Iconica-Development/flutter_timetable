@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:timetable/src/block_service.dart';
@@ -21,8 +23,6 @@ class Timetable extends StatefulWidget {
     this.blockWidth = 50,
     this.blockColor = const Color(0x80FF0000),
     this.hourHeight = 80,
-    this.tablePaddingStart = 10,
-    this.tablePaddingEnd = 15,
     this.theme = const TableTheme(),
     this.mergeBlocks = false,
     this.combineBlocks = true,
@@ -46,12 +46,6 @@ class Timetable extends StatefulWidget {
 
   /// The heigh of one hour in the timetable.
   final double hourHeight;
-
-  /// The padding between the table markings and the first block.
-  final double tablePaddingStart;
-
-  /// The padding between the last block and the end of the table.
-  final double tablePaddingEnd;
 
   /// The theme of the timetable.
   final TableTheme theme;
@@ -80,7 +74,9 @@ class _TimetableState extends State<Timetable> {
   void initState() {
     super.initState();
     _scrollController = widget.scrollController ?? ScrollController();
-    _scrollToFirstBlock();
+    if (widget.timeBlocks.isNotEmpty) {
+      _scrollToFirstBlock();
+    }
   }
 
   @override
@@ -133,6 +129,9 @@ class _TimetableState extends State<Timetable> {
                             ],
                           ],
                         ),
+                        SizedBox(
+                          width: widget.theme.blockPaddingBetween,
+                        ),
                       ],
                     ] else ...[
                       for (var block in blocks) ...[
@@ -140,7 +139,11 @@ class _TimetableState extends State<Timetable> {
                       ],
                     ],
                     SizedBox(
-                      width: widget.tablePaddingEnd,
+                      width: max(
+                        widget.theme.tablePaddingEnd -
+                            widget.theme.blockPaddingBetween,
+                        0,
+                      ),
                       height: widget.hourHeight *
                           (widget.endHour -
                               widget.startHour +
@@ -158,7 +161,7 @@ class _TimetableState extends State<Timetable> {
 
   double _calculateTableStart() {
     return _calculateTableTextSize().width +
-        widget.tablePaddingStart +
+        widget.theme.tablePaddingStart +
         widget.theme.tableTextOffset;
   }
 
@@ -194,7 +197,10 @@ class _TimetableState extends State<Timetable> {
 
   Size _calculateTableTextSize() {
     return (TextPainter(
-      text: TextSpan(text: '22:22', style: widget.theme.timeStyle),
+      text: TextSpan(
+        text: '22:22',
+        style: widget.theme.timeStyle ?? Theme.of(context).textTheme.bodyText1,
+      ),
       maxLines: 1,
       textScaleFactor: MediaQuery.of(context).textScaleFactor,
       textDirection: TextDirection.ltr,

@@ -40,7 +40,8 @@ class Table extends StatelessWidget {
                   children: [
                     Text(
                       '${i.toString().padLeft(2, '0')}:00',
-                      style: theme.timeStyle,
+                      style: theme.timeStyle ??
+                          Theme.of(context).textTheme.bodyText1,
                     ),
                     SizedBox(
                       width: theme.tableTextOffset,

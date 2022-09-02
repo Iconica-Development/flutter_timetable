@@ -105,9 +105,9 @@ class _TimetableDemoState extends State<TimetableDemo> {
                   endHour: 22,
                   timeBlocks: blocks,
                   scrollController: _scrollController,
-                  tablePaddingStart: 0,
                   combineBlocks: true,
                   mergeBlocks: false,
+                  theme: const TableTheme(tablePaddingStart: 0),
                 )
               ] else ...[
                 Timetable(
@@ -115,9 +115,9 @@ class _TimetableDemoState extends State<TimetableDemo> {
                   endHour: 22,
                   timeBlocks: blocks,
                   scrollController: _scrollController,
-                  tablePaddingStart: 0,
                   combineBlocks: true,
                   mergeBlocks: true,
+                  theme: const TableTheme(tablePaddingStart: 0),
                 ),
               ],
             ],
