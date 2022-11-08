@@ -11,6 +11,7 @@ class TimeBlock {
     required this.end,
     this.id = 0,
     this.child,
+    this.childDimension,
   }) : assert(
           start.hour <= end.hour ||
               (start.hour == end.hour && start.minute < end.minute),
@@ -28,6 +29,11 @@ class TimeBlock {
   /// The child widget that will be displayed within the block.
   /// The size of the parent widget should dictate the size of the child.
   final Widget? child;
+
+  /// The dimension of the child in the axis of the timetable which it expands.
+  /// Only needed when child is not null and the horizontalvariant is used.
+  /// This is used to make the timetable background as large as all the blocks.
+  final double? childDimension;
 
   /// The identifier of the block that is used to collapse blocks in 1 column.
   /// Leave empty or 0 if you do not want to collapse blocks.
