@@ -21,6 +21,7 @@ class Timetable extends StatefulWidget {
   const Timetable({
     this.tableDirection = Axis.vertical,
     this.timeBlocks = const [],
+    this.size,
     this.scrollController,
     this.scrollPhysics,
     this.startHour = 0,
@@ -36,6 +37,9 @@ class Timetable extends StatefulWidget {
 
   /// The Axis in which the table is layed out.
   final Axis tableDirection;
+
+  /// The [Size] of the timetable.
+  final Size? size;
 
   /// Hour at which the timetable starts.
   final int startHour;
@@ -106,81 +110,44 @@ class _TimetableState extends State<Timetable> {
       blocks = widget.timeBlocks;
     }
     var linePadding = _calculateTableTextSize().width;
-    return SingleChildScrollView(
-      key: // TODO(freek): test if this is necessary
-          ValueKey<int>(widget.timeBlocks.length),
-      physics: widget.scrollPhysics ?? const BouncingScrollPhysics(),
-      controller: _scrollController,
-      scrollDirection: widget.tableDirection,
-      child: Stack(
-        alignment: Alignment.topLeft,
-        children: [
-          table.Table(
-            tableHeight: widget.tableDirection == Axis.horizontal
-                ? _calculateTableHeight()
-                : 0,
-            tableDirection: widget.tableDirection,
-            startHour: widget.startHour,
-            endHour: widget.endHour,
-            hourDimension: widget.hourDimension,
-            tableOffset: _calculateTableStart(widget.tableDirection).width,
-            theme: widget.theme,
-          ),
-          Container(
-            margin: EdgeInsets.only(
-              top: _calculateTableStart(widget.tableDirection).height,
-              left: _calculateTableStart(widget.tableDirection).width,
+    return SizedBox(
+      width: widget.size?.width,
+      height: widget.size?.height,
+      child: SingleChildScrollView(
+        physics: widget.scrollPhysics ?? const BouncingScrollPhysics(),
+        controller: _scrollController,
+        scrollDirection: widget.tableDirection,
+        child: Stack(
+          alignment: Alignment.topLeft,
+          children: [
+            table.Table(
+              tableHeight: widget.tableDirection == Axis.horizontal
+                  ? _calculateTableHeight()
+                  : 0,
+              tableDirection: widget.tableDirection,
+              startHour: widget.startHour,
+              endHour: widget.endHour,
+              hourDimension: widget.hourDimension,
+              tableOffset: _calculateTableStart(widget.tableDirection).width,
+              theme: widget.theme,
+              size: widget.size,
             ),
-            child: SingleChildScrollView(
-              key: // TODO(freek): test if this is necessary
-                  ValueKey<int>(widget.timeBlocks.length),
-              physics: widget.scrollPhysics ?? const BouncingScrollPhysics(),
-              scrollDirection: widget.tableDirection == Axis.horizontal
-                  ? Axis.vertical
-                  : Axis.horizontal,
-              child: (widget.tableDirection == Axis.horizontal)
-                  ? Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        SizedBox(height: widget.theme.tableTextOffset),
-                        if (widget.mergeBlocks || widget.combineBlocks) ...[
-                          for (var orderedBlocks in (widget.mergeBlocks)
-                              ? mergeBlocksInColumns(blocks)
-                              : groupBlocksById(blocks)) ...[
-                            Stack(
-                              children: [
-                                for (var block in orderedBlocks) ...[
-                                  _showBlock(block),
-                                ],
-                              ],
-                            ),
-                            SizedBox(
-                              height: widget.theme.blockPaddingBetween,
-                            ),
-                          ],
-                        ] else ...[
-                          for (var block in blocks) ...[
-                            _showBlock(block, linePadding: linePadding),
-                            SizedBox(
-                              height: widget.theme.blockPaddingBetween,
-                            ),
-                          ],
-                        ],
-                        // emtpy block at the end
-                        SizedBox(
-                          height: max(
-                            widget.theme.tablePaddingEnd -
-                                widget.theme.blockPaddingBetween,
-                            0,
-                          ),
-                        ),
-                      ],
-                    )
-                  : IntrinsicHeight(
-                      child: Row(
+            Container(
+              margin: EdgeInsets.only(
+                top: _calculateTableStart(widget.tableDirection).height,
+                left: _calculateTableStart(widget.tableDirection).width,
+              ),
+              child: SingleChildScrollView(
+                physics: widget.scrollPhysics ?? const BouncingScrollPhysics(),
+                scrollDirection: widget.tableDirection == Axis.horizontal
+                    ? Axis.vertical
+                    : Axis.horizontal,
+                child: (widget.tableDirection == Axis.horizontal)
+                    ? Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
+                          SizedBox(height: widget.theme.tableTextOffset),
                           if (widget.mergeBlocks || widget.combineBlocks) ...[
                             for (var orderedBlocks in (widget.mergeBlocks)
                                 ? mergeBlocksInColumns(blocks)
@@ -193,31 +160,69 @@ class _TimetableState extends State<Timetable> {
                                 ],
                               ),
                               SizedBox(
-                                width: widget.theme.blockPaddingBetween,
+                                height: widget.theme.blockPaddingBetween,
                               ),
                             ],
                           ] else ...[
                             for (var block in blocks) ...[
-                              _showBlock(block),
+                              _showBlock(block, linePadding: linePadding),
+                              SizedBox(
+                                height: widget.theme.blockPaddingBetween,
+                              ),
                             ],
                           ],
+                          // emtpy block at the end
                           SizedBox(
-                            width: max(
+                            height: max(
                               widget.theme.tablePaddingEnd -
                                   widget.theme.blockPaddingBetween,
                               0,
                             ),
-                            height: widget.hourDimension *
-                                (widget.endHour -
-                                    widget.startHour +
-                                    0.5), // empty halfhour at the end
                           ),
                         ],
+                      )
+                    : IntrinsicHeight(
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            if (widget.mergeBlocks || widget.combineBlocks) ...[
+                              for (var orderedBlocks in (widget.mergeBlocks)
+                                  ? mergeBlocksInColumns(blocks)
+                                  : groupBlocksById(blocks)) ...[
+                                Stack(
+                                  children: [
+                                    for (var block in orderedBlocks) ...[
+                                      _showBlock(block),
+                                    ],
+                                  ],
+                                ),
+                                SizedBox(
+                                  width: widget.theme.blockPaddingBetween,
+                                ),
+                              ],
+                            ] else ...[
+                              for (var block in blocks) ...[
+                                _showBlock(block),
+                              ],
+                            ],
+                            SizedBox(
+                              width: max(
+                                widget.theme.tablePaddingEnd -
+                                    widget.theme.blockPaddingBetween,
+                                0,
+                              ),
+                              height: widget.hourDimension *
+                                  (widget.endHour -
+                                      widget.startHour +
+                                      0.5), // empty halfhour at the end
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -225,11 +230,13 @@ class _TimetableState extends State<Timetable> {
   Size _calculateTableStart(Axis axis) {
     return Size(
       (axis == Axis.horizontal)
-          ? 0
+          ? _calculateTableTextSize().width / 2
           : _calculateTableTextSize().width +
               widget.theme.tablePaddingStart +
               widget.theme.tableTextOffset,
-      (axis == Axis.vertical) ? 0 : _calculateTableTextSize().height,
+      (axis == Axis.vertical)
+          ? _calculateTableTextSize().height / 2
+          : _calculateTableTextSize().height,
     );
   }
 

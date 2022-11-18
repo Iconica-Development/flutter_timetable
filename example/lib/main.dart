@@ -121,45 +121,49 @@ class _TimetableDemoState extends State<TimetableDemo> {
 
   @override
   Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size;
     return Scaffold(
+      // backgroundColor: Colors.green,
       body: Padding(
         padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              // toggle between horizontal and vertical
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  TextButton(
-                    onPressed: () {
-                      setState(() {
-                        _horizontal = !_horizontal;
-                      });
-                    },
-                    child: Text(_horizontal ? 'Horizontal' : 'Vertical'),
-                  ),
-                ],
-              ),
-              // toggle between grouped and ungrouped blocks
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text('Grouped'),
-                  Switch(
-                    value: _grouped,
-                    onChanged: (value) {
-                      setState(() {
-                        _grouped = value;
-                      });
-                    },
-                  ),
-                ],
-              ),
-              Timetable(
+        child: Column(
+          children: [
+            // toggle between horizontal and vertical
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextButton(
+                  onPressed: () {
+                    setState(() {
+                      _horizontal = !_horizontal;
+                    });
+                  },
+                  child: Text(_horizontal ? 'Horizontal' : 'Vertical'),
+                ),
+              ],
+            ),
+            // toggle between grouped and ungrouped blocks
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text('Grouped'),
+                Switch(
+                  value: _grouped,
+                  onChanged: (value) {
+                    setState(() {
+                      _grouped = value;
+                    });
+                  },
+                ),
+              ],
+            ),
+            Container(
+              color: Colors.white,
+              child: Timetable(
+                size: Size(size.width, size.height * 0.64),
                 tableDirection: _horizontal ? Axis.horizontal : Axis.vertical,
                 startHour: 3,
-                endHour: 22,
+                endHour: 24,
                 timeBlocks: blocks,
                 scrollController: _scrollController,
                 combineBlocks: true,
@@ -169,8 +173,8 @@ class _TimetableDemoState extends State<TimetableDemo> {
                   blockPaddingBetween: 10,
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

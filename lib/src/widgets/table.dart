@@ -10,6 +10,7 @@ class Table extends StatelessWidget {
   const Table({
     required this.startHour,
     required this.endHour,
+    this.size,
     this.tableDirection = Axis.vertical,
     this.hourDimension = 80,
     this.tableOffset = 20,
@@ -23,6 +24,9 @@ class Table extends StatelessWidget {
 
   /// The [Axis] in which the table is layed out.
   final Axis tableDirection;
+
+  /// The [Size] used for the table rendering.
+  final Size? size;
 
   /// The hour the table starts at.
   final int startHour;
@@ -64,7 +68,9 @@ class Table extends StatelessWidget {
                       Container(
                         color: theme.lineColor,
                         width: theme.lineHeight,
-                        height: tableHeight,
+                        height: (size ?? MediaQuery.of(context).size).height -
+                            textSize.dy -
+                            theme.tableTextOffset,
                       ),
                     ],
                   ),
@@ -84,7 +90,11 @@ class Table extends StatelessWidget {
                         // draw dotted line
                         for (int i = 0;
                             i <
-                                tableHeight /
+                                (((size ?? MediaQuery.of(context).size)
+                                            .height) -
+                                        textSize.dy -
+                                        theme.tableTextOffset -
+                                        theme.lineDashDistance) /
                                     ((theme.lineDashLength +
                                             theme.lineDashDistance) /
                                         2);
@@ -144,7 +154,7 @@ class Table extends StatelessWidget {
                       children: [
                         for (int i = 0;
                             i <
-                                (MediaQuery.of(context).size.width -
+                                ((size ?? MediaQuery.of(context).size).width -
                                         tableOffset -
                                         textSize.dx / 2) /
                                     ((theme.lineDashLength +
