@@ -18,6 +18,7 @@ class TimetableDemo extends StatefulWidget {
 
 class _TimetableDemoState extends State<TimetableDemo> {
   bool _grouped = false;
+  bool _horizontal = true;
   final ScrollController _scrollController = ScrollController();
   final List<TimeBlock> blocks = [
     TimeBlock(
@@ -39,37 +40,76 @@ class _TimetableDemoState extends State<TimetableDemo> {
       start: const TimeOfDay(hour: 10, minute: 15),
       end: const TimeOfDay(hour: 11, minute: 0),
       child: Container(color: Colors.purple, height: 300, width: 50),
+      childDimension: 300,
       id: 2,
     ),
     TimeBlock(
       start: const TimeOfDay(hour: 6, minute: 15),
       end: const TimeOfDay(hour: 7, minute: 0),
-      child: Container(color: Colors.blue, height: 300, width: 200),
+      child: Container(color: Colors.blue, height: 300, width: 300),
+      childDimension: 300,
       id: 2,
     ),
     TimeBlock(
       start: const TimeOfDay(hour: 18, minute: 0),
-      end: const TimeOfDay(hour: 18, minute: 15),
-      child: const Text('High Tea'),
+      end: const TimeOfDay(hour: 18, minute: 30),
+      child:
+          const SizedBox(width: 60, height: 60, child: const Text('High Tea')),
+      childDimension: 60,
       id: 10,
     ),
     TimeBlock(
       start: const TimeOfDay(hour: 18, minute: 0),
-      end: const TimeOfDay(hour: 18, minute: 15),
-      child: const Text('High Tea'),
+      end: const TimeOfDay(hour: 18, minute: 30),
+      child: const SizedBox(
+        height: 60,
+        width: 60,
+        child: const Text('High Tea'),
+      ),
+      childDimension: 60,
       id: 10,
     ),
     TimeBlock(
       start: const TimeOfDay(hour: 18, minute: 0),
-      end: const TimeOfDay(hour: 18, minute: 15),
-      child: const Text('High Tea'),
+      end: const TimeOfDay(hour: 18, minute: 30),
+      child: const SizedBox(
+        height: 60,
+        width: 60,
+        child: const Text('High Tea'),
+      ),
+      childDimension: 60,
       id: 10,
     ),
     TimeBlock(
       start: const TimeOfDay(hour: 18, minute: 0),
-      end: const TimeOfDay(hour: 18, minute: 15),
-      child: const Text('High Tea'),
+      end: const TimeOfDay(hour: 18, minute: 30),
+      child: const SizedBox(
+        height: 50,
+        width: 50,
+        child: const Text('High Tea'),
+      ),
+      childDimension: 60,
       id: 0,
+    ),
+    TimeBlock(
+      start: const TimeOfDay(hour: 14, minute: 0),
+      end: const TimeOfDay(hour: 15, minute: 0),
+      id: 100,
+    ),
+    TimeBlock(
+      start: const TimeOfDay(hour: 14, minute: 0),
+      end: const TimeOfDay(hour: 15, minute: 0),
+      id: 101,
+    ),
+    TimeBlock(
+      start: const TimeOfDay(hour: 14, minute: 0),
+      end: const TimeOfDay(hour: 15, minute: 0),
+      id: 102,
+    ),
+    TimeBlock(
+      start: const TimeOfDay(hour: 14, minute: 0),
+      end: const TimeOfDay(hour: 15, minute: 0),
+      id: 103,
     ),
   ];
 
@@ -81,51 +121,60 @@ class _TimetableDemoState extends State<TimetableDemo> {
 
   @override
   Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size;
     return Scaffold(
+      // backgroundColor: Colors.green,
       body: Padding(
         padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
-        child: SingleChildScrollView(
-          controller: _scrollController,
-          child: Column(
-            children: [
-              // toggle between grouped and ungrouped blocks
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text('Grouped'),
-                  Switch(
-                    value: _grouped,
-                    onChanged: (value) {
-                      setState(() {
-                        _grouped = value;
-                      });
-                    },
-                  ),
-                ],
-              ),
-              if (_grouped) ...[
-                Timetable(
-                  startHour: 3,
-                  endHour: 22,
-                  timeBlocks: blocks,
-                  scrollController: _scrollController,
-                  combineBlocks: true,
-                  mergeBlocks: false,
-                  theme: const TableTheme(tablePaddingStart: 0),
-                )
-              ] else ...[
-                Timetable(
-                  startHour: 3,
-                  endHour: 22,
-                  timeBlocks: blocks,
-                  scrollController: _scrollController,
-                  combineBlocks: true,
-                  mergeBlocks: true,
-                  theme: const TableTheme(tablePaddingStart: 0),
+        child: Column(
+          children: [
+            // toggle between horizontal and vertical
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextButton(
+                  onPressed: () {
+                    setState(() {
+                      _horizontal = !_horizontal;
+                    });
+                  },
+                  child: Text(_horizontal ? 'Horizontal' : 'Vertical'),
                 ),
               ],
-            ],
-          ),
+            ),
+            // toggle between grouped and ungrouped blocks
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text('Grouped'),
+                Switch(
+                  value: _grouped,
+                  onChanged: (value) {
+                    setState(() {
+                      _grouped = value;
+                    });
+                  },
+                ),
+              ],
+            ),
+            Container(
+              color: Colors.white,
+              child: Timetable(
+                size: Size(size.width, size.height * 0.64),
+                tableDirection: _horizontal ? Axis.horizontal : Axis.vertical,
+                startHour: 3,
+                endHour: 24,
+                timeBlocks: blocks,
+                scrollController: _scrollController,
+                combineBlocks: true,
+                mergeBlocks: _grouped,
+                theme: const TableTheme(
+                  tablePaddingStart: 0,
+                  blockPaddingBetween: 10,
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

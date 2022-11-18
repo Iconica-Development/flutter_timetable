@@ -58,6 +58,12 @@ void _combineGroupedBlocks(
       start: block.first.start,
       end: endTime,
       id: block.first.id,
+      // combine the childDimension of all the children
+      childDimension: block.fold(
+        0.0,
+        (previousValue, element) =>
+            (previousValue ?? 0.0) + (element.childDimension ?? 0.0),
+      ),
       child: Column(
         children: [
           for (var b in block) ...[b.child ?? Container()],
@@ -111,7 +117,7 @@ List<List<TimeBlock>> groupBlocksById(List<TimeBlock> blocks) {
   return groupedBlocks;
 }
 
-/// Nerge blocks that fit below eachother into one column.
+/// Merge blocks that fit below eachother into one column.
 List<List<TimeBlock>> mergeBlocksInColumns(List<TimeBlock> blocks) {
   var mergedBlocks = <List<TimeBlock>>[];
   for (var block in blocks) {

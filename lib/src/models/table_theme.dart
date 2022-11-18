@@ -9,9 +9,10 @@ class TableTheme {
   /// and offsets here.
   const TableTheme({
     this.lineColor = const Color(0x809E9E9E),
-    this.lineHeight = 2,
+    this.lineStrokeWidth = 2,
     this.tableTextOffset = 5,
-    this.lineDashFrequency = 25,
+    this.lineDashDistance = 10,
+    this.lineDashLength = 10,
     this.timeStyle,
     this.tablePaddingStart = 10,
     this.tablePaddingEnd = 15,
@@ -22,10 +23,13 @@ class TableTheme {
   final Color lineColor;
 
   /// The height of the lines.
-  final double lineHeight;
+  final double lineStrokeWidth;
 
-  /// The amount of dashes on the line.
-  final int lineDashFrequency;
+  /// The distance between dashes on the line.
+  final double lineDashDistance;
+
+  /// The length of the dashes on the line.
+  final double lineDashLength;
 
   /// Distance between the time text and the line.
   final double tableTextOffset;

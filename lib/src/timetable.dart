@@ -19,19 +19,27 @@ class Timetable extends StatefulWidget {
   /// [mergeBlocks] and [combineBlocks] can be used to combine blocks
   /// and merge columns of blocks when possible.
   const Timetable({
+    this.tableDirection = Axis.vertical,
     this.timeBlocks = const [],
+    this.size,
     this.scrollController,
     this.scrollPhysics,
     this.startHour = 0,
     this.endHour = 24,
-    this.blockWidth = 50,
+    this.blockDimension = 50,
     this.blockColor = const Color(0x80FF0000),
-    this.hourHeight = 80,
+    this.hourDimension = 80,
     this.theme = const TableTheme(),
     this.mergeBlocks = false,
     this.combineBlocks = true,
     Key? key,
   }) : super(key: key);
+
+  /// The Axis in which the table is layed out.
+  final Axis tableDirection;
+
+  /// The [Size] of the timetable.
+  final Size? size;
 
   /// Hour at which the timetable starts.
   final int startHour;
@@ -42,14 +50,15 @@ class Timetable extends StatefulWidget {
   /// The time blocks that will be displayed in the timetable.
   final List<TimeBlock> timeBlocks;
 
-  /// The width of the block if there is no child
-  final double blockWidth;
+  /// The dimension in pixels of the block if there is no child
+  /// for the direction that the table expands in
+  final double blockDimension;
 
   /// The color of the block if there is no child
   final Color blockColor;
 
-  /// The heigh of one hour in the timetable.
-  final double hourHeight;
+  /// The dimension in pixels of one hour in the timetable.
+  final double hourDimension;
 
   /// The theme of the timetable.
   final TableTheme theme;
@@ -77,7 +86,8 @@ class _TimetableState extends State<Timetable> {
   @override
   void initState() {
     super.initState();
-    _scrollController = widget.scrollController ?? ScrollController();
+    _scrollController =
+        widget.scrollController ?? ScrollController(initialScrollOffset: 0);
     if (widget.timeBlocks.isNotEmpty) {
       _scrollToFirstBlock();
     }
@@ -99,83 +109,143 @@ class _TimetableState extends State<Timetable> {
     } else {
       blocks = widget.timeBlocks;
     }
-    return SingleChildScrollView(
-      physics: widget.scrollPhysics ?? const BouncingScrollPhysics(),
-      controller: _scrollController,
-      child: Stack(
-        children: [
-          table.Table(
-            startHour: widget.startHour,
-            endHour: widget.endHour,
-            hourHeight: widget.hourHeight,
-            tableOffset: _calculateTableStart(),
-            theme: widget.theme,
-          ),
-          Container(
-            margin: EdgeInsets.only(
-              left: _calculateTableStart(),
+    var linePadding = _calculateTableTextSize().width;
+    return SizedBox(
+      width: widget.size?.width,
+      height: widget.size?.height,
+      child: SingleChildScrollView(
+        physics: widget.scrollPhysics ?? const BouncingScrollPhysics(),
+        controller: _scrollController,
+        scrollDirection: widget.tableDirection,
+        child: Stack(
+          alignment: Alignment.topLeft,
+          children: [
+            table.Table(
+              tableDirection: widget.tableDirection,
+              startHour: widget.startHour,
+              endHour: widget.endHour,
+              hourDimension: widget.hourDimension,
+              tableOffset: _calculateTableStart(widget.tableDirection).width,
+              theme: widget.theme,
+              size: widget.size,
             ),
-            child: SingleChildScrollView(
-              physics: widget.scrollPhysics ?? const BouncingScrollPhysics(),
-              scrollDirection: Axis.horizontal,
-              child: IntrinsicHeight(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (widget.mergeBlocks || widget.combineBlocks) ...[
-                      for (var orderedBlocks in (widget.mergeBlocks)
-                          ? mergeBlocksInColumns(blocks)
-                          : groupBlocksById(blocks)) ...[
-                        Stack(
-                          children: [
-                            for (var block in orderedBlocks) ...[
-                              _showBlock(block),
+            Container(
+              margin: EdgeInsets.only(
+                top: _calculateTableStart(widget.tableDirection).height,
+                left: _calculateTableStart(widget.tableDirection).width,
+              ),
+              child: SingleChildScrollView(
+                physics: widget.scrollPhysics ?? const BouncingScrollPhysics(),
+                scrollDirection: widget.tableDirection == Axis.horizontal
+                    ? Axis.vertical
+                    : Axis.horizontal,
+                child: (widget.tableDirection == Axis.horizontal)
+                    ? Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          SizedBox(height: widget.theme.tableTextOffset),
+                          if (widget.mergeBlocks || widget.combineBlocks) ...[
+                            for (var orderedBlocks in (widget.mergeBlocks)
+                                ? mergeBlocksInColumns(blocks)
+                                : groupBlocksById(blocks)) ...[
+                              Stack(
+                                children: [
+                                  for (var block in orderedBlocks) ...[
+                                    _showBlock(block),
+                                  ],
+                                ],
+                              ),
+                              SizedBox(
+                                height: widget.theme.blockPaddingBetween,
+                              ),
+                            ],
+                          ] else ...[
+                            for (var block in blocks) ...[
+                              _showBlock(block, linePadding: linePadding),
+                              SizedBox(
+                                height: widget.theme.blockPaddingBetween,
+                              ),
                             ],
                           ],
+                          // emtpy block at the end
+                          SizedBox(
+                            height: max(
+                              widget.theme.tablePaddingEnd -
+                                  widget.theme.blockPaddingBetween,
+                              0,
+                            ),
+                          ),
+                        ],
+                      )
+                    : IntrinsicHeight(
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            if (widget.mergeBlocks || widget.combineBlocks) ...[
+                              for (var orderedBlocks in (widget.mergeBlocks)
+                                  ? mergeBlocksInColumns(blocks)
+                                  : groupBlocksById(blocks)) ...[
+                                Stack(
+                                  children: [
+                                    for (var block in orderedBlocks) ...[
+                                      _showBlock(block),
+                                    ],
+                                  ],
+                                ),
+                                SizedBox(
+                                  width: widget.theme.blockPaddingBetween,
+                                ),
+                              ],
+                            ] else ...[
+                              for (var block in blocks) ...[
+                                _showBlock(block),
+                              ],
+                            ],
+                            SizedBox(
+                              width: max(
+                                widget.theme.tablePaddingEnd -
+                                    widget.theme.blockPaddingBetween,
+                                0,
+                              ),
+                              height: widget.hourDimension *
+                                  (widget.endHour -
+                                      widget.startHour +
+                                      0.5), // empty halfhour at the end
+                            ),
+                          ],
                         ),
-                        SizedBox(
-                          width: widget.theme.blockPaddingBetween,
-                        ),
-                      ],
-                    ] else ...[
-                      for (var block in blocks) ...[
-                        _showBlock(block),
-                      ],
-                    ],
-                    SizedBox(
-                      width: max(
-                        widget.theme.tablePaddingEnd -
-                            widget.theme.blockPaddingBetween,
-                        0,
                       ),
-                      height: widget.hourHeight *
-                          (widget.endHour -
-                              widget.startHour +
-                              0.5), // empty halfhour at the end
-                    ),
-                  ],
-                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 
-  double _calculateTableStart() {
-    return _calculateTableTextSize().width +
-        widget.theme.tablePaddingStart +
-        widget.theme.tableTextOffset;
+  Size _calculateTableStart(Axis axis) {
+    return Size(
+      (axis == Axis.horizontal)
+          ? _calculateTableTextSize().width / 2
+          : _calculateTableTextSize().width +
+              widget.theme.tablePaddingStart +
+              widget.theme.tableTextOffset,
+      (axis == Axis.vertical)
+          ? _calculateTableTextSize().height / 2
+          : _calculateTableTextSize().height,
+    );
   }
 
-  Widget _showBlock(TimeBlock block) {
+  Widget _showBlock(TimeBlock block, {double linePadding = 0}) {
     return Block(
+      blockDirection: widget.tableDirection,
+      linePadding: linePadding,
       start: block.start,
       end: block.end,
       startHour: widget.startHour,
-      hourHeight: widget.hourHeight,
-      blockWidth: widget.blockWidth,
+      hourDimension: widget.hourDimension,
+      blockDimension: widget.blockDimension,
       blockColor: widget.blockColor,
       child: block.child,
     );
@@ -190,12 +260,14 @@ class _TimetableState extends State<Timetable> {
                     : b,
           );
       var initialOffset =
-          (widget.hourHeight * (widget.endHour - widget.startHour)) *
-              ((earliestStart.hour - widget.startHour) /
-                  (widget.endHour - widget.startHour));
+          (widget.hourDimension * (widget.endHour - widget.startHour)) *
+                  ((earliestStart.hour - widget.startHour) /
+                      (widget.endHour - widget.startHour)) +
+              _calculateTableTextSize().width / 2;
       _scrollController.jumpTo(
         initialOffset,
       );
+      // TODO(freek): stop the controller from resetting
     });
   }
 
@@ -210,5 +282,46 @@ class _TimetableState extends State<Timetable> {
       textDirection: TextDirection.ltr,
     )..layout())
         .size;
+  }
+
+  double calculateTableHeight() {
+    var sum = 0.0;
+    if (widget.mergeBlocks || widget.combineBlocks) {
+      for (var orderedBlocks in (widget.mergeBlocks)
+          ? mergeBlocksInColumns(widget.timeBlocks)
+          : groupBlocksById(widget.timeBlocks)) {
+        // check if any orderedBlock collides with another orderedBlock
+        if (orderedBlocks.map((block) => block.id).toSet().isNotEmpty &&
+            orderedBlocks.any(
+              (block) => orderedBlocks.any(
+                (block2) => block != block2 && block.collidesWith(block2),
+              ),
+            )) {
+          // the sum is the combination of all the blocks
+          sum += orderedBlocks
+              .map((block) => block.childDimension ?? widget.blockDimension)
+              .reduce((a, b) => a + b);
+        } else {
+          sum +=
+              // get the highest block within the group
+              orderedBlocks
+                      .map(
+                        (block) => max(
+                          block.childDimension ?? 0,
+                          widget.blockDimension,
+                        ),
+                      )
+                      .reduce(max) +
+                  widget.theme.blockPaddingBetween;
+        }
+      }
+    } else {
+      // sum of all the widget heights
+      sum = widget.timeBlocks
+          .map((block) => block.childDimension ?? widget.blockDimension)
+          .reduce((a, b) => a + b);
+      sum += widget.timeBlocks.length * widget.theme.blockPaddingBetween;
+    }
+    return sum;
   }
 }

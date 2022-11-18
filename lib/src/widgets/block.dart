@@ -10,13 +10,17 @@ class Block extends StatelessWidget {
     required this.start,
     required this.end,
     required this.startHour,
-    required this.blockWidth,
-    required this.hourHeight,
+    required this.blockDimension,
+    required this.hourDimension,
+    required this.blockDirection,
     this.blockColor = const Color(0x80FF0000),
     this.linePadding = 8,
     this.child,
     Key? key,
   }) : super(key: key);
+
+  /// The [Axis] along which the [Block] will be displayed.
+  final Axis blockDirection;
 
   /// The start time of the block in 24 hour format
   final TimeOfDay start;
@@ -24,17 +28,17 @@ class Block extends StatelessWidget {
   /// The end time of the block in 24 hour format
   final TimeOfDay end;
 
-  /// Widget that will be displayed within the block.
+  /// Widget that will be displayed within the block
   final Widget? child;
 
   /// The start hour of the timetable.
   final int startHour;
 
-  /// The heigh of one hour in the timetable.
-  final double hourHeight;
+  /// The dimension in pixels of one hour in the timetable
+  final double hourDimension;
 
-  /// The width of the block if there is no child
-  final double blockWidth;
+  /// The dimension in pixels of the block if there is no child
+  final double blockDimension;
 
   /// The color of the block if there is no child
   final Color blockColor;
@@ -46,28 +50,41 @@ class Block extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(
-        top: (((start.hour - startHour) * Duration.minutesPerHour) +
-                    start.minute) *
-                _sizePerMinute() +
-            linePadding,
+        top: (blockDirection == Axis.vertical)
+            ? (((start.hour - startHour) * Duration.minutesPerHour) +
+                        start.minute) *
+                    _sizePerMinute() +
+                linePadding
+            : 0,
+        left: (blockDirection == Axis.horizontal)
+            ? ((((start.hour - startHour) * Duration.minutesPerHour) +
+                        start.minute) *
+                    _sizePerMinute() +
+                linePadding)
+            : 0,
       ),
-      height: (((end.hour - start.hour) * Duration.minutesPerHour) +
-              end.minute -
-              start.minute) *
-          _sizePerMinute(),
+      height: (blockDirection == Axis.vertical)
+          ? (((end.hour - start.hour) * Duration.minutesPerHour) +
+                  end.minute -
+                  start.minute) *
+              _sizePerMinute()
+          : null,
+      width: (blockDirection == Axis.horizontal)
+          ? (((end.hour - start.hour) * Duration.minutesPerHour) +
+                  end.minute -
+                  start.minute) *
+              _sizePerMinute()
+          : null,
       child: child ??
           Container(
-            height: (((end.hour - start.hour) * Duration.minutesPerHour) +
-                    end.minute -
-                    start.minute) *
-                _sizePerMinute(),
-            width: blockWidth,
+            height: (blockDirection == Axis.horizontal) ? blockDimension : 0,
+            width: (blockDirection == Axis.vertical) ? blockDimension : 0,
             color: blockColor,
           ),
     );
   }
 
   double _sizePerMinute() {
-    return hourHeight / Duration.minutesPerHour;
+    return hourDimension / Duration.minutesPerHour;
   }
 }
