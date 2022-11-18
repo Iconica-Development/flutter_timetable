@@ -121,9 +121,6 @@ class _TimetableState extends State<Timetable> {
           alignment: Alignment.topLeft,
           children: [
             table.Table(
-              tableHeight: widget.tableDirection == Axis.horizontal
-                  ? _calculateTableHeight()
-                  : 0,
               tableDirection: widget.tableDirection,
               startHour: widget.startHour,
               endHour: widget.endHour,
@@ -287,7 +284,7 @@ class _TimetableState extends State<Timetable> {
         .size;
   }
 
-  double _calculateTableHeight() {
+  double calculateTableHeight() {
     var sum = 0.0;
     if (widget.mergeBlocks || widget.combineBlocks) {
       for (var orderedBlocks in (widget.mergeBlocks)

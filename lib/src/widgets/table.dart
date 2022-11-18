@@ -14,13 +14,9 @@ class Table extends StatelessWidget {
     this.tableDirection = Axis.vertical,
     this.hourDimension = 80,
     this.tableOffset = 20,
-    this.tableHeight = 400,
     this.theme = const TableTheme(),
     Key? key,
   }) : super(key: key);
-
-  //// The height of the table when the tableDirection is horizontal to render the vertical lines
-  final double tableHeight;
 
   /// The [Axis] in which the table is layed out.
   final Axis tableDirection;
@@ -67,7 +63,7 @@ class Table extends StatelessWidget {
                       SizedBox(height: theme.tableTextOffset),
                       Container(
                         color: theme.lineColor,
-                        width: theme.lineHeight,
+                        width: theme.lineStrokeWidth,
                         height: (size ?? MediaQuery.of(context).size).height -
                             textSize.dy -
                             theme.tableTextOffset,
@@ -79,7 +75,7 @@ class Table extends StatelessWidget {
                     SizedBox(
                       width: hourDimension / 2 -
                           textSize.dx / 2 -
-                          theme.lineHeight,
+                          theme.lineStrokeWidth,
                     ),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -100,7 +96,7 @@ class Table extends StatelessWidget {
                                         2);
                             i++) ...[
                           Container(
-                            width: theme.lineHeight,
+                            width: theme.lineStrokeWidth,
                             height: i.isEven
                                 ? theme.lineDashLength
                                 : theme.lineDashDistance,
@@ -137,7 +133,7 @@ class Table extends StatelessWidget {
                     ),
                     Expanded(
                       child: Container(
-                        height: theme.lineHeight,
+                        height: theme.lineStrokeWidth,
                         color: theme.lineColor,
                       ),
                     )
@@ -149,7 +145,7 @@ class Table extends StatelessWidget {
                     margin: EdgeInsets.only(
                       left: tableOffset,
                     ),
-                    height: theme.lineHeight,
+                    height: theme.lineStrokeWidth,
                     child: Row(
                       children: [
                         for (int i = 0;
@@ -165,7 +161,7 @@ class Table extends StatelessWidget {
                             width: i.isEven
                                 ? theme.lineDashLength
                                 : theme.lineDashDistance,
-                            height: theme.lineHeight,
+                            height: theme.lineStrokeWidth,
                             color:
                                 i.isEven ? theme.lineColor : Colors.transparent,
                           ),

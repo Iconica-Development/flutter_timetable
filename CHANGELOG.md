@@ -6,6 +6,7 @@
 
 * Updated TableTheme
 
-## [0.0.3] - 24 Oktober 2022
+## [1.0.0] - 18 November 2022
 
 * Added horizontal variant
+* Adjustable size for the component
