@@ -275,7 +275,7 @@ class _TimetableState extends State<Timetable> {
     return (TextPainter(
       text: TextSpan(
         text: '22:22',
-        style: widget.theme.timeStyle ?? Theme.of(context).textTheme.bodyText1,
+        style: widget.theme.timeStyle ?? Theme.of(context).textTheme.bodyLarge,
       ),
       maxLines: 1,
       textScaleFactor: MediaQuery.of(context).textScaleFactor,

@@ -58,7 +58,7 @@ class Table extends StatelessWidget {
                         '${((i == 24) ? '00' : i.toString()).padLeft(2, '0')}'
                         ':00',
                         style: theme.timeStyle ??
-                            Theme.of(context).textTheme.bodyText1,
+                            Theme.of(context).textTheme.bodyLarge,
                       ),
                       SizedBox(height: theme.tableTextOffset),
                       Container(
@@ -126,7 +126,7 @@ class Table extends StatelessWidget {
                     Text(
                       '${i.toString().padLeft(2, '0')}:00',
                       style: theme.timeStyle ??
-                          Theme.of(context).textTheme.bodyText1,
+                          Theme.of(context).textTheme.bodyLarge,
                     ),
                     SizedBox(
                       width: theme.tableTextOffset,
@@ -183,7 +183,7 @@ class Table extends StatelessWidget {
     var textPainter = TextPainter(
       text: TextSpan(
         text: text,
-        style: theme.timeStyle ?? Theme.of(context).textTheme.bodyText1,
+        style: theme.timeStyle ?? Theme.of(context).textTheme.bodyLarge,
       ),
       textDirection: TextDirection.ltr,
     )..layout();
