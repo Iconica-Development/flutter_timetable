@@ -1,4 +1,4 @@
-
+[![pub package](https://img.shields.io/pub/v/flutter_timetable.svg)](https://github.com/Iconica-Development) [![Build status](https://img.shields.io/github/workflow/status/Iconica-Development/flutter_timetable/CI)](https://github.com/Iconica-Development/flutter_timetable/actions/new) [![style: effective dart](https://img.shields.io/badge/style-effective_dart-40c4ff.svg)](https://github.com/tenhobi/effective_dart) 
 # Flutter Timetable
 A Flutter package for creating a Timetable widget in which to display blocks of time with optional widgets in them.
 The vertical time range is configurable and the widget is horizontally scrollable. The timetable has options to merge blocks below eachother when they are not overlapping or collapse items that are at the same time and have the same identifier.
