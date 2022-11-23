@@ -13,7 +13,7 @@ class Block extends StatelessWidget {
     required this.blockDimension,
     required this.hourDimension,
     required this.blockDirection,
-    this.blockColor = const Color(0x80FF0000),
+    this.blockColor = Colors.blue,
     this.linePadding = 8,
     this.child,
     Key? key,
@@ -49,6 +49,7 @@ class Block extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      color: blockColor,
       margin: EdgeInsets.only(
         top: (blockDirection == Axis.vertical)
             ? (((start.hour - startHour) * Duration.minutesPerHour) +
@@ -76,10 +77,9 @@ class Block extends StatelessWidget {
               _sizePerMinute()
           : null,
       child: child ??
-          Container(
+          SizedBox(
             height: (blockDirection == Axis.horizontal) ? blockDimension : 0,
             width: (blockDirection == Axis.vertical) ? blockDimension : 0,
-            color: blockColor,
           ),
     );
   }
