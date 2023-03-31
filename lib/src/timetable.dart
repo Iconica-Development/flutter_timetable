@@ -27,7 +27,7 @@ class Timetable extends StatefulWidget {
     this.startHour = 0,
     this.endHour = 24,
     this.blockDimension = 50,
-    this.blockColor = const Color(0x80FF0000),
+    this.blockColor = Colors.blue,
     this.hourDimension = 80,
     this.theme = const TableTheme(),
     this.mergeBlocks = false,
@@ -275,7 +275,7 @@ class _TimetableState extends State<Timetable> {
     return (TextPainter(
       text: TextSpan(
         text: '22:22',
-        style: widget.theme.timeStyle ?? Theme.of(context).textTheme.bodyText1,
+        style: widget.theme.timeStyle ?? Theme.of(context).textTheme.bodyLarge,
       ),
       maxLines: 1,
       textScaleFactor: MediaQuery.of(context).textScaleFactor,
