@@ -6,11 +6,11 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:timetable/src/block_service.dart';
-import 'package:timetable/src/models/table_theme.dart';
-import 'package:timetable/src/models/time_block.dart';
-import 'package:timetable/src/widgets/block.dart';
-import 'package:timetable/src/widgets/table.dart' as table;
+import 'package:flutter_timetable/src/block_service.dart';
+import 'package:flutter_timetable/src/models/table_theme.dart';
+import 'package:flutter_timetable/src/models/time_block.dart';
+import 'package:flutter_timetable/src/widgets/block.dart';
+import 'package:flutter_timetable/src/widgets/table.dart' as table;
 
 class Timetable extends StatefulWidget {
   /// [Timetable] widget that displays a timetable with [TimeBlock]s.
@@ -22,6 +22,7 @@ class Timetable extends StatefulWidget {
     this.tableDirection = Axis.vertical,
     this.timeBlocks = const [],
     this.size,
+    this.initialScrollTime,
     this.scrollController,
     this.scrollPhysics,
     this.startHour = 0,
@@ -63,6 +64,9 @@ class Timetable extends StatefulWidget {
   /// The theme of the timetable.
   final TableTheme theme;
 
+  /// The initial time to scroll to if there are no timeblocks. If nothing is provided it will scroll to the current time or to the first block if there is one.
+  final TimeOfDay? initialScrollTime;
+
   /// The scroll controller to control the scrolling of the timetable.
   final ScrollController? scrollController;
 
@@ -90,6 +94,8 @@ class _TimetableState extends State<Timetable> {
         widget.scrollController ?? ScrollController(initialScrollOffset: 0);
     if (widget.timeBlocks.isNotEmpty) {
       _scrollToFirstBlock();
+    } else {
+      _scrollToInitialTime();
     }
   }
 
@@ -224,32 +230,28 @@ class _TimetableState extends State<Timetable> {
     );
   }
 
-  Size _calculateTableStart(Axis axis) {
-    return Size(
-      (axis == Axis.horizontal)
-          ? _calculateTableTextSize().width / 2
-          : _calculateTableTextSize().width +
-              widget.theme.tablePaddingStart +
-              widget.theme.tableTextOffset,
-      (axis == Axis.vertical)
-          ? _calculateTableTextSize().height / 2
-          : _calculateTableTextSize().height,
-    );
-  }
+  Size _calculateTableStart(Axis axis) => Size(
+        (axis == Axis.horizontal)
+            ? _calculateTableTextSize().width / 2
+            : _calculateTableTextSize().width +
+                widget.theme.tablePaddingStart +
+                widget.theme.tableTextOffset,
+        (axis == Axis.vertical)
+            ? _calculateTableTextSize().height / 2
+            : _calculateTableTextSize().height,
+      );
 
-  Widget _showBlock(TimeBlock block, {double linePadding = 0}) {
-    return Block(
-      blockDirection: widget.tableDirection,
-      linePadding: linePadding,
-      start: block.start,
-      end: block.end,
-      startHour: widget.startHour,
-      hourDimension: widget.hourDimension,
-      blockDimension: widget.blockDimension,
-      blockColor: widget.blockColor,
-      child: block.child,
-    );
-  }
+  Widget _showBlock(TimeBlock block, {double linePadding = 0}) => Block(
+        blockDirection: widget.tableDirection,
+        linePadding: linePadding,
+        start: block.start,
+        end: block.end,
+        startHour: widget.startHour,
+        hourDimension: widget.hourDimension,
+        blockDimension: widget.blockDimension,
+        blockColor: widget.blockColor,
+        child: block.child,
+      );
 
   void _scrollToFirstBlock() {
     SchedulerBinding.instance.addPostFrameCallback((_) {
@@ -271,18 +273,31 @@ class _TimetableState extends State<Timetable> {
     });
   }
 
-  Size _calculateTableTextSize() {
-    return (TextPainter(
-      text: TextSpan(
-        text: '22:22',
-        style: widget.theme.timeStyle ?? Theme.of(context).textTheme.bodyLarge,
-      ),
-      maxLines: 1,
-      textScaleFactor: MediaQuery.of(context).textScaleFactor,
-      textDirection: TextDirection.ltr,
-    )..layout())
-        .size;
+  void _scrollToInitialTime() {
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      var startingTime = widget.initialScrollTime ?? TimeOfDay.now();
+      var initialOffset =
+          (widget.hourDimension * (widget.endHour - widget.startHour)) *
+                  ((startingTime.hour - widget.startHour) /
+                      (widget.endHour - widget.startHour)) +
+              _calculateTableTextSize().width / 2;
+      _scrollController.jumpTo(
+        initialOffset,
+      );
+    });
   }
+
+  Size _calculateTableTextSize() => (TextPainter(
+        text: TextSpan(
+          text: '22:22',
+          style:
+              widget.theme.timeStyle ?? Theme.of(context).textTheme.bodyLarge,
+        ),
+        maxLines: 1,
+        textScaleFactor: MediaQuery.of(context).textScaleFactor,
+        textDirection: TextDirection.ltr,
+      )..layout())
+          .size;
 
   double calculateTableHeight() {
     var sum = 0.0;

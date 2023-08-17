@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: BSD-3-Clause
 
 import 'package:flutter/material.dart';
-import 'package:timetable/src/models/table_theme.dart';
+import 'package:flutter_timetable/src/models/table_theme.dart';
 
 class Table extends StatelessWidget {
   /// The [Table] to draw an overview of timerange with corresponding hour lines
