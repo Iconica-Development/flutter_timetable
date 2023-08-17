@@ -10,3 +10,7 @@
 
 * Added horizontal variant
 * Adjustable size for the component
+
+## [1.1.0] - 17 August 2023
+
+* Set scrolling to the current time by default if there are no blocks
