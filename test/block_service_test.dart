@@ -4,8 +4,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:timetable/src/block_service.dart';
-import 'package:timetable/timetable.dart';
+import 'package:flutter_timetable/src/block_service.dart';
+import 'package:flutter_timetable/timetable.dart';
 
 void main() {
   group('test combineBlocksWithId', () {

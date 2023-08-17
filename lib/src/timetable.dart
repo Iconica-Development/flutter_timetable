@@ -6,11 +6,11 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:timetable/src/block_service.dart';
-import 'package:timetable/src/models/table_theme.dart';
-import 'package:timetable/src/models/time_block.dart';
-import 'package:timetable/src/widgets/block.dart';
-import 'package:timetable/src/widgets/table.dart' as table;
+import 'package:flutter_timetable/src/block_service.dart';
+import 'package:flutter_timetable/src/models/table_theme.dart';
+import 'package:flutter_timetable/src/models/time_block.dart';
+import 'package:flutter_timetable/src/widgets/block.dart';
+import 'package:flutter_timetable/src/widgets/table.dart' as table;
 
 class Timetable extends StatefulWidget {
   /// [Timetable] widget that displays a timetable with [TimeBlock]s.

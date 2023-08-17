@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: BSD-3-Clause
 
 import 'package:flutter/material.dart';
-import 'package:timetable/timetable.dart';
+import 'package:flutter_timetable/timetable.dart';
 
 void main() {
   runApp(const MaterialApp(home: TimetableDemo()));
@@ -27,8 +27,8 @@ class _TimetableDemoState extends State<TimetableDemo> {
       child: Container(
         color: Colors.red,
         child: const Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: const Text(
+          padding: EdgeInsets.all(8.0),
+          child: Text(
             'Exercise',
             style: TextStyle(color: Colors.white),
           ),
@@ -42,8 +42,8 @@ class _TimetableDemoState extends State<TimetableDemo> {
       child: Container(
         color: Colors.orange,
         child: const Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: const Text(
+          padding: EdgeInsets.all(8.0),
+          child: Text(
             'Brunch',
             style: TextStyle(color: Colors.white),
           ),
