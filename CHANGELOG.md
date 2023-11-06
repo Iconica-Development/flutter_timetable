@@ -14,3 +14,7 @@
 ## [1.1.0] - 17 August 2023
 
 * Set scrolling to the current time by default if there are no blocks
+
+## [1.2.0] - 6 November 2023
+
+* Add the ability to use BorderScroll. If enabled the next page is shown when scrolling to an specific offset.
