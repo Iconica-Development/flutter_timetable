@@ -33,6 +33,8 @@ class Timetable extends StatefulWidget {
     this.theme = const TableTheme(),
     this.mergeBlocks = false,
     this.combineBlocks = true,
+    this.onOverScroll,
+    this.onUnderScroll,
     Key? key,
   }) : super(key: key);
 
@@ -80,6 +82,9 @@ class Timetable extends StatefulWidget {
   /// If blocks have the same id and time they will be combined into one block.
   final bool combineBlocks;
 
+  final void Function()? onUnderScroll;
+  final void Function()? onOverScroll;
+
   @override
   State<Timetable> createState() => _TimetableState();
 }
@@ -90,12 +95,37 @@ class _TimetableState extends State<Timetable> {
   @override
   void initState() {
     super.initState();
+
     _scrollController =
         widget.scrollController ?? ScrollController(initialScrollOffset: 0);
     if (widget.timeBlocks.isNotEmpty) {
       _scrollToFirstBlock();
     } else {
       _scrollToInitialTime();
+    }
+
+    if (widget.onUnderScroll != null && widget.onOverScroll != null) {
+      _scrollController.addListener(() {
+        if (_scrollController.offset -
+                _scrollController.position.maxScrollExtent >
+            120) {
+          if (widget.onOverScroll != null) {
+            _scrollController
+                .jumpTo(_scrollController.position.minScrollExtent - 115);
+
+            widget.onOverScroll?.call();
+          }
+        } else if (_scrollController.position.minScrollExtent -
+                _scrollController.offset >
+            120) {
+          if (widget.onUnderScroll != null) {
+            _scrollController
+                .jumpTo(_scrollController.position.maxScrollExtent + 115);
+
+            widget.onUnderScroll?.call();
+          }
+        }
+      });
     }
   }
 
