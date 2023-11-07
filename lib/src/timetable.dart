@@ -35,8 +35,13 @@ class Timetable extends StatefulWidget {
     this.combineBlocks = true,
     this.onOverScroll,
     this.onUnderScroll,
-    Key? key,
-  }) : super(key: key);
+    this.scrollTriggerOffset = 120,
+    this.scrollJumpToOffset = 115,
+    super.key,
+  }) : assert(
+            scrollTriggerOffset < scrollJumpToOffset,
+            'ScrollTriggerOffset cannot be smaller'
+            ' then the scrollJumpToOffset.');
 
   /// The Axis in which the table is layed out.
   final Axis tableDirection;
@@ -82,6 +87,12 @@ class Timetable extends StatefulWidget {
   /// If blocks have the same id and time they will be combined into one block.
   final bool combineBlocks;
 
+  /// The offset which trigger the jump to either the previous or next page. Can't be lower then [scrollJumpToOffset].
+  final double scrollTriggerOffset;
+
+  /// When the jump is triggered this offset will be jumped outside of the min or max offset. Can't be higher then [scrollTriggerOffset].
+  final double scrollJumpToOffset;
+
   final void Function()? onUnderScroll;
   final void Function()? onOverScroll;
 
@@ -108,19 +119,21 @@ class _TimetableState extends State<Timetable> {
       _scrollController.addListener(() {
         if (_scrollController.offset -
                 _scrollController.position.maxScrollExtent >
-            120) {
+            widget.scrollTriggerOffset) {
           if (widget.onOverScroll != null) {
-            _scrollController
-                .jumpTo(_scrollController.position.minScrollExtent - 115);
+            _scrollController.jumpTo(
+                _scrollController.position.minScrollExtent -
+                    widget.scrollJumpToOffset);
 
             widget.onOverScroll?.call();
           }
         } else if (_scrollController.position.minScrollExtent -
                 _scrollController.offset >
-            120) {
+            widget.scrollTriggerOffset) {
           if (widget.onUnderScroll != null) {
-            _scrollController
-                .jumpTo(_scrollController.position.maxScrollExtent + 115);
+            _scrollController.jumpTo(
+                _scrollController.position.maxScrollExtent +
+                    widget.scrollJumpToOffset);
 
             widget.onUnderScroll?.call();
           }
