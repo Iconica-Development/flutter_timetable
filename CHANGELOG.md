@@ -18,3 +18,7 @@
 ## [1.2.0] - 6 November 2023
 
 * Add the ability to use BorderScroll. If enabled the next page is shown when scrolling to an specific offset.
+
+## [1.2.1] - 7 November 2023
+
+* Fixed the assert on the [scrollTriggerOffset] and [scrollJumpToOffset].

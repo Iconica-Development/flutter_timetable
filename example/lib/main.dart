@@ -147,6 +147,8 @@ class _TimetableDemoState extends State<TimetableDemo> {
           Container(
             color: Colors.white,
             child: Timetable(
+              onOverScroll: () {},
+              onUnderScroll: () {},
               size: Size(size.width, size.height * 0.64),
               tableDirection: _horizontal ? Axis.horizontal : Axis.vertical,
               startHour: 3,

@@ -39,7 +39,7 @@ class Timetable extends StatefulWidget {
     this.scrollJumpToOffset = 115,
     super.key,
   }) : assert(
-            scrollTriggerOffset < scrollJumpToOffset,
+            scrollTriggerOffset > scrollJumpToOffset,
             'ScrollTriggerOffset cannot be smaller'
             ' then the scrollJumpToOffset.');
 
