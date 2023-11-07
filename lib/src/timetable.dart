@@ -33,8 +33,15 @@ class Timetable extends StatefulWidget {
     this.theme = const TableTheme(),
     this.mergeBlocks = false,
     this.combineBlocks = true,
-    Key? key,
-  }) : super(key: key);
+    this.onOverScroll,
+    this.onUnderScroll,
+    this.scrollTriggerOffset = 120,
+    this.scrollJumpToOffset = 115,
+    super.key,
+  }) : assert(
+            scrollTriggerOffset < scrollJumpToOffset,
+            'ScrollTriggerOffset cannot be smaller'
+            ' then the scrollJumpToOffset.');
 
   /// The Axis in which the table is layed out.
   final Axis tableDirection;
@@ -80,6 +87,15 @@ class Timetable extends StatefulWidget {
   /// If blocks have the same id and time they will be combined into one block.
   final bool combineBlocks;
 
+  /// The offset which trigger the jump to either the previous or next page. Can't be lower then [scrollJumpToOffset].
+  final double scrollTriggerOffset;
+
+  /// When the jump is triggered this offset will be jumped outside of the min or max offset. Can't be higher then [scrollTriggerOffset].
+  final double scrollJumpToOffset;
+
+  final void Function()? onUnderScroll;
+  final void Function()? onOverScroll;
+
   @override
   State<Timetable> createState() => _TimetableState();
 }
@@ -90,12 +106,39 @@ class _TimetableState extends State<Timetable> {
   @override
   void initState() {
     super.initState();
+
     _scrollController =
         widget.scrollController ?? ScrollController(initialScrollOffset: 0);
     if (widget.timeBlocks.isNotEmpty) {
       _scrollToFirstBlock();
     } else {
       _scrollToInitialTime();
+    }
+
+    if (widget.onUnderScroll != null && widget.onOverScroll != null) {
+      _scrollController.addListener(() {
+        if (_scrollController.offset -
+                _scrollController.position.maxScrollExtent >
+            widget.scrollTriggerOffset) {
+          if (widget.onOverScroll != null) {
+            _scrollController.jumpTo(
+                _scrollController.position.minScrollExtent -
+                    widget.scrollJumpToOffset);
+
+            widget.onOverScroll?.call();
+          }
+        } else if (_scrollController.position.minScrollExtent -
+                _scrollController.offset >
+            widget.scrollTriggerOffset) {
+          if (widget.onUnderScroll != null) {
+            _scrollController.jumpTo(
+                _scrollController.position.maxScrollExtent +
+                    widget.scrollJumpToOffset);
+
+            widget.onUnderScroll?.call();
+          }
+        }
+      });
     }
   }
 
