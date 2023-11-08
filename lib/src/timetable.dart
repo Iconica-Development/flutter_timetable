@@ -25,6 +25,7 @@ class Timetable extends StatefulWidget {
     this.initialScrollTime,
     this.scrollController,
     this.scrollPhysics,
+    this.hoursOffset = 0,
     this.startHour = 0,
     this.endHour = 24,
     this.blockDimension = 50,
@@ -54,6 +55,10 @@ class Timetable extends StatefulWidget {
 
   /// Hour at which the timetable ends.
   final int endHour;
+
+  /// The time offset to increase all hour labels with
+  /// this is used to make the timetable start at a different time and go past midnight.
+  final int hoursOffset;
 
   /// The time blocks that will be displayed in the timetable.
   final List<TimeBlock> timeBlocks;
@@ -170,6 +175,7 @@ class _TimetableState extends State<Timetable> {
           alignment: Alignment.topLeft,
           children: [
             table.Table(
+              hoursOffset: widget.hoursOffset,
               tableDirection: widget.tableDirection,
               startHour: widget.startHour,
               endHour: widget.endHour,

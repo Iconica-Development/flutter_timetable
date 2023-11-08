@@ -10,13 +10,14 @@ class Table extends StatelessWidget {
   const Table({
     required this.startHour,
     required this.endHour,
+    this.hoursOffset = 0,
     this.size,
     this.tableDirection = Axis.vertical,
     this.hourDimension = 80,
     this.tableOffset = 20,
     this.theme = const TableTheme(),
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   /// The [Axis] in which the table is layed out.
   final Axis tableDirection;
@@ -29,6 +30,9 @@ class Table extends StatelessWidget {
 
   /// The hour the table ends at.
   final int endHour;
+
+  /// The time offset to increase all hour labels with
+  final int hoursOffset;
 
   /// The length in pixel of a single hour in the table.
   final double hourDimension;
@@ -55,7 +59,7 @@ class Table extends StatelessWidget {
                   Column(
                     children: [
                       Text(
-                        '${((i == 24) ? '00' : i.toString()).padLeft(2, '0')}'
+                        '${(((i + hoursOffset) == 24) ? '00' : ((i + hoursOffset) % 24).toString()).padLeft(2, '0')}'
                         ':00',
                         style: theme.timeStyle ??
                             Theme.of(context).textTheme.bodyLarge,
@@ -124,7 +128,7 @@ class Table extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      '${i.toString().padLeft(2, '0')}:00',
+                      '${((i + hoursOffset) % 24).toString().padLeft(2, '0')}:00',
                       style: theme.timeStyle ??
                           Theme.of(context).textTheme.bodyLarge,
                     ),
