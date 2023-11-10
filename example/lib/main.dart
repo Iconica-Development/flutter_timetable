@@ -149,9 +149,10 @@ class _TimetableDemoState extends State<TimetableDemo> {
             child: Timetable(
               onOverScroll: () {},
               onUnderScroll: () {},
+              hoursOffset: 6,
               size: Size(size.width, size.height * 0.64),
               tableDirection: _horizontal ? Axis.horizontal : Axis.vertical,
-              startHour: 3,
+              startHour: 0,
               endHour: 24,
               timeBlocks: blocks,
               scrollController: _scrollController,

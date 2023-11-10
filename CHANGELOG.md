@@ -22,3 +22,7 @@
 ## [1.2.1] - 7 November 2023
 
 * Fixed the assert on the [scrollTriggerOffset] and [scrollJumpToOffset].
+
+## [1.3.0] - 8 November 2023
+
+* Add the option for setting an offset for the hours so that the first hour is not 00:00 but 08:00 for example and the last hour can be after 24:00.
