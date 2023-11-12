@@ -34,15 +34,21 @@ class Timetable extends StatefulWidget {
     this.theme = const TableTheme(),
     this.mergeBlocks = false,
     this.combineBlocks = true,
+    this.sortByIdAscending = false,
     this.onOverScroll,
     this.onUnderScroll,
     this.scrollTriggerOffset = 120,
     this.scrollJumpToOffset = 115,
     super.key,
-  }) : assert(
-            scrollTriggerOffset > scrollJumpToOffset,
-            'ScrollTriggerOffset cannot be smaller'
-            ' then the scrollJumpToOffset.');
+  })  : assert(
+          scrollTriggerOffset > scrollJumpToOffset,
+          'ScrollTriggerOffset cannot be smaller'
+          ' then the scrollJumpToOffset.',
+        ),
+        assert(
+            !(mergeBlocks && sortByIdAscending),
+            'mergeBlocks and sortByIdAscending'
+            ' cannot be enabled at the same time.');
 
   /// The Axis in which the table is layed out.
   final Axis tableDirection;
@@ -91,6 +97,9 @@ class Timetable extends StatefulWidget {
   /// Whether or not to collapse blocks in 1 column if they have the same id.
   /// If blocks have the same id and time they will be combined into one block.
   final bool combineBlocks;
+
+  /// Whether or not to sort blocks by their ID in ascending order.
+  final bool sortByIdAscending;
 
   /// The offset which trigger the jump to either the previous or next page. Can't be lower then [scrollJumpToOffset].
   final double scrollTriggerOffset;
@@ -163,6 +172,14 @@ class _TimetableState extends State<Timetable> {
     } else {
       blocks = widget.timeBlocks;
     }
+
+    if (widget.sortByIdAscending) {
+      // if the id is zero then put it at the end
+      blocks.sort((a, b) => (a.id != 0 ? a.id : double.infinity).compareTo(
+            (b.id != 0 ? b.id : double.infinity),
+          ));
+    }
+
     var linePadding = _calculateTableTextSize().width;
     return SizedBox(
       width: widget.size?.width,

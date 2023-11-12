@@ -34,7 +34,7 @@ class _TimetableDemoState extends State<TimetableDemo> {
           ),
         ),
       ),
-      id: 1,
+      id: 3,
     ),
     TimeBlock(
       start: const TimeOfDay(hour: 10, minute: 0),
@@ -50,7 +50,7 @@ class _TimetableDemoState extends State<TimetableDemo> {
         ),
       ),
       childDimension: 300,
-      id: 3,
+      id: 1,
     ),
     TimeBlock(
         start: const TimeOfDay(hour: 14, minute: 0),
@@ -150,6 +150,7 @@ class _TimetableDemoState extends State<TimetableDemo> {
               onOverScroll: () {},
               onUnderScroll: () {},
               hoursOffset: 6,
+              sortByIdAscending: true,
               size: Size(size.width, size.height * 0.64),
               tableDirection: _horizontal ? Axis.horizontal : Axis.vertical,
               startHour: 0,

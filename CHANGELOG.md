@@ -26,3 +26,7 @@
 ## [1.3.0] - 8 November 2023
 
 * Add the option for setting an offset for the hours so that the first hour is not 00:00 but 08:00 for example and the last hour can be after 24:00.
+
+## [1.4.0] - 13 November 2023
+
+* Add the option for sorting the blocks by their id.
