@@ -1,19 +1,6 @@
-name: flutter_timetable
-description: Flutter package to create a Timetable Widget that display blocks of widgets inside a timetable.
-version: 1.4.0
-repository: https://github.com/Iconica-Development/timetable
+name: flutter_timetable_workspace
 
 environment:
-  sdk: ">=3.0.0 <4.0.0"
-  flutter: ">=1.17.0"
-
-dependencies:
-  flutter:
-    sdk: flutter
-
+  sdk: '>=3.1.0 <4.0.0'
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
-  flutter_lints: ^2.0.0
-
-flutter:
+  melos: ^3.0.1

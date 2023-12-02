@@ -13,8 +13,10 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^1.0.2
-  flutter_timetable:
+  flutter_timetable_view:
     path: ../
+  flutter_timetable_interface:
+    path: ../../flutter_timetable_interface
 
 dev_dependencies:
   flutter_test:

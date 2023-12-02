@@ -1,0 +1,23 @@
+version: 2
+
+updates:
+  # - package-ecosystem: "pub"
+  #   directory: "/packages/flutter_timetable"
+  #   schedule:
+  #     interval: "weekly"
+
+  - package-ecosystem: "pub"
+    directory: "/packages/flutter_timetable_interface"
+    schedule:
+      interval: "weekly"
+
+  - package-ecosystem: "pub"
+    directory: "/packages/flutter_timetable_firebase"
+    schedule:
+      interval: "weekly"
+
+  - package-ecosystem: "pub"
+    directory: "/packages/flutter_timetable_view"
+    schedule:
+      interval: "weekly"
+

@@ -1,0 +1,22 @@
+# SPDX-FileCopyrightText: 2023 Iconica
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+name: flutter_timetable_interface
+description: A new Flutter package project.
+version: 2.0.0
+repository: https://github.com/Iconica-Development/flutter_timetable
+publish_to: none
+
+environment:
+  sdk: ">=3.1.0 <4.0.0"
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_lints: ^2.0.0
+
+flutter:

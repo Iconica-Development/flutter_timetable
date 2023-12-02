@@ -30,3 +30,7 @@
 ## [1.4.0] - 13 November 2023
 
 * Add the option for sorting the blocks by their id.
+
+## [2.0.0] - 03 December 2023
+
+* Create Melos variant of the component where there are multiple packages in the same repository.

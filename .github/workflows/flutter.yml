@@ -1,4 +1,4 @@
-name: Iconica Standard Component CI Workflow
+name: Iconica Standard Melos CI Workflow
 # Workflow Caller version: 1.0.0
 
 on:
@@ -7,6 +7,8 @@ on:
 
 jobs:
   call-global-iconica-workflow:
-    uses: Iconica-Development/.github/.github/workflows/component-ci.yml@master
+    uses: Iconica-Development/.github/.github/workflows/melos-ci.yml@master
     secrets: inherit
     permissions: write-all
+    with:
+      subfolder: '.' # add optional subfolder to run workflow in
