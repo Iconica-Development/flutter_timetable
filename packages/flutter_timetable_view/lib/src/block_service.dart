@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: BSD-3-Clause
 
 import 'package:flutter/material.dart';
-import 'package:flutter_timetable_interface/flutter_timetable_interface.dart';
+import 'package:flutter_timetable_view/src/models/time_block.dart';
 
 /// Combine blocks that have the same id and the same time.
 List<TimeBlock> combineBlocksWithId(List<TimeBlock> blocks) {

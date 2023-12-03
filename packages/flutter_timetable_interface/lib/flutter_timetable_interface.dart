@@ -4,4 +4,5 @@
 
 library flutter_timetable_interface;
 
-export 'src/model/time_block.dart';
+export 'src/models/timetable_event.dart';
+export 'src/services/timetable_service.dart';

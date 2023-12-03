@@ -1,4 +1,4 @@
-name: flutter_timetable_view_example
+name: flutter_timetable_firebase_example
 description: Timetable Widget
 
 publish_to: 'none'
@@ -13,10 +13,12 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^1.0.2
-  flutter_timetable_view:
+  flutter_timetable_firebase:
     path: ../
   flutter_timetable_interface:
     path: ../../flutter_timetable_interface
+  hooks_riverpod: ^2.4.9
+  
 
 dev_dependencies:
   flutter_test:

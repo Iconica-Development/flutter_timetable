@@ -6,9 +6,9 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:flutter_timetable_interface/flutter_timetable_interface.dart';
 import 'package:flutter_timetable_view/src/block_service.dart';
 import 'package:flutter_timetable_view/src/models/table_theme.dart';
+import 'package:flutter_timetable_view/src/models/time_block.dart';
 import 'package:flutter_timetable_view/src/widgets/block.dart';
 
 import 'package:flutter_timetable_view/src/widgets/table.dart' as table;
