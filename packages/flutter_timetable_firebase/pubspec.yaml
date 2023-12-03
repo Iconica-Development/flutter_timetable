@@ -13,6 +13,8 @@ environment:
   flutter: ">=1.17.0"
 
 dependencies:
+  cloud_firestore: ^4.13.3
+  firebase_core: ^2.24.0
   flutter:
     sdk: flutter
   flutter_timetable_interface:

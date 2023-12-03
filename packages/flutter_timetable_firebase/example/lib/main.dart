@@ -16,7 +16,7 @@ class MyRosterModel extends TimetableEvent {
 
 final myRosterServiceProvider = Provider(
   (ref) => FirebaseTimetableService<MyRosterModel>(
-    options: FirebaseTimetableOptions(timelineCollectionName: 'roster'),
+    options: FirebaseTimetableOptions(timetableCollectionName: 'roster'),
   ),
 );
 

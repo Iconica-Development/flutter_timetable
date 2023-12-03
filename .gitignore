@@ -29,6 +29,8 @@ pubspec.lock
 .packages
 build/
 .metadata
+.flutter-plugins
+.flutter-plugins-dependencies
 
 android/
 ios/

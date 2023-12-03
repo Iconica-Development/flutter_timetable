@@ -12,6 +12,7 @@ class TimetableEvent {
     required this.end,
     required this.entityId,
     required this.eventId,
+    this.category,
   });
 
   /// The date at which the event starts
@@ -27,4 +28,18 @@ class TimetableEvent {
   /// The identifier of the entity that the event belongs to
   /// This is used to check for conflicts between entities
   final String entityId;
+
+  /// This can be used to filter events
+  final String? category;
+
+  // tojson method and a factory fromJson contructor
+  Map<String, dynamic> toJson() => {};
+
+  factory TimetableEvent.fromJson(String eventId, Map<String, dynamic> json) =>
+      TimetableEvent(
+        start: json['start'],
+        end: json['end'],
+        entityId: json[''],
+        eventId: eventId,
+      );
 }
