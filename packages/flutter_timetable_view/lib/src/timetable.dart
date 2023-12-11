@@ -36,6 +36,7 @@ class Timetable extends StatefulWidget {
     this.mergeBlocks = false,
     this.combineBlocks = true,
     this.sortByIdAscending = false,
+    this.sortByStartTime = false,
     this.onOverScroll,
     this.onUnderScroll,
     this.scrollTriggerOffset = 120,
@@ -102,6 +103,9 @@ class Timetable extends StatefulWidget {
   /// Whether or not to sort blocks by their ID in ascending order.
   final bool sortByIdAscending;
 
+  /// Whether or not to sort blocks by their StartTime.
+  final bool sortByStartTime;
+
   /// The offset which trigger the jump to either the previous or next page. Can't be lower then [scrollJumpToOffset].
   final double scrollTriggerOffset;
 
@@ -157,6 +161,12 @@ class _TimetableState extends State<Timetable> {
     }
   }
 
+  int compareTimeOfDay(TimeOfDay time1, TimeOfDay time2) {
+    var totalMinutes1 = time1.hour * 60 + time1.minute;
+    var totalMinutes2 = time2.hour * 60 + time2.minute;
+    return totalMinutes1.compareTo(totalMinutes2);
+  }
+
   @override
   void dispose() {
     if (widget.scrollController == null) {
@@ -179,6 +189,10 @@ class _TimetableState extends State<Timetable> {
       blocks.sort((a, b) => (a.id != 0 ? a.id : double.infinity).compareTo(
             (b.id != 0 ? b.id : double.infinity),
           ));
+    }
+
+    if (widget.sortByStartTime) {
+      blocks.sort((a, b) => compareTimeOfDay(a.start, b.start));
     }
 
     var linePadding = _calculateTableTextSize().width;
