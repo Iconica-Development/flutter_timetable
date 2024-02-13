@@ -1,0 +1,14 @@
+name: Iconica Standard Component Documentation Workflow
+# Workflow Caller version: 1.0.0
+
+on:
+  release:
+    types: [published]
+
+  workflow_dispatch:
+
+jobs:
+  call-iconica-component-documentation-workflow:
+    uses: Iconica-Development/.github/.github/workflows/component-documentation.yml@master
+    secrets: inherit
+    permissions: write-all
