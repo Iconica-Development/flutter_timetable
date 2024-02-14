@@ -39,6 +39,7 @@ List<TimeBlock> combineBlocksWithId(List<TimeBlock> blocks) {
   return newBlocks;
 }
 
+/// Combines grouped blocks into one block.
 void _combineGroupedBlocks(
   List<List<TimeBlock>> groupedBlocks,
   List<TimeBlock> newBlocks,
@@ -74,6 +75,10 @@ void _combineGroupedBlocks(
   }
 }
 
+/// Checks if a block with a certain id exists in the grouped blocks.
+///
+/// Returns true if a block with the same id, start time, and end time exists in the grouped blocks list.
+/// Otherwise, returns false.
 bool _checkIfBlockWithIdExists(
   List<List<TimeBlock>> groupedBlocks,
   TimeBlock block,

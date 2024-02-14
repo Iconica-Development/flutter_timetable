@@ -375,7 +375,7 @@ class _TimetableState extends State<Timetable> {
               widget.theme.timeStyle ?? Theme.of(context).textTheme.bodyLarge,
         ),
         maxLines: 1,
-        textScaler: MediaQuery.textScalerOf(context),
+        textScaler: MediaQuery.of(context).textScaler,
         textDirection: TextDirection.ltr,
       )..layout())
           .size;
