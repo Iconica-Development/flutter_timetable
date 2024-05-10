@@ -30,3 +30,7 @@
 ## [1.4.0] - 13 November 2023
 
 * Add the option for sorting the blocks by their id.
+
+## [1.5.0] - 10 May 2024
+
+* Added the option to sort on the starttime of an event.
