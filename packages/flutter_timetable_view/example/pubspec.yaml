@@ -16,7 +16,7 @@ dependencies:
   flutter_timetable_view:
     path: ../
   flutter_timetable_interface:
-    path: ../../flutter_timetable_interface
+    hosted: https://forgejo.internal.iconica.nl/api/packages/internal/pub
 
 dev_dependencies:
   flutter_test:

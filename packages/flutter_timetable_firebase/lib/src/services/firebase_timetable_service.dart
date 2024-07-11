@@ -22,7 +22,7 @@ class FirebaseTimetableService<Event extends TimetableEvent>
   @override
   Future<void> addEvent(Event event) async {
     event.toJson();
-  
+
     throw UnimplementedError();
   }
 

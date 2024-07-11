@@ -36,3 +36,7 @@
 * Create Melos variant of the component where there are multiple packages in the same repository.
 
 * Added the option to sort on the starttime of an event.
+
+## [3.0.0] - 11 July 2024
+
+* Rename main entry point to flutter_timetable

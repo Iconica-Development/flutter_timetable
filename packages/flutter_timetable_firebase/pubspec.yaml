@@ -6,7 +6,8 @@ name: flutter_timetable_firebase
 description: A new Flutter package project.
 version: 2.0.0
 repository: https://github.com/Iconica-Development/flutter_timetable
-publish_to: none
+
+publish_to: https://forgejo.internal.iconica.nl/api/packages/internal/pub
 
 environment:
   sdk: ">=3.1.0 <4.0.0"
@@ -18,13 +19,9 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_timetable_interface:
-    git: 
-      url: https://github.com/Iconica-Development/flutter_timetable
-      ref: 2.0.0
-      path: packages/flutter_timetable_interface
+    hosted: https://forgejo.internal.iconica.nl/api/packages/internal/pub
+    version: ^2.0.0
 
 
 dev_dependencies:
   flutter_lints: ^2.0.0
-
-flutter:

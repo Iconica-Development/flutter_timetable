@@ -16,7 +16,8 @@ dependencies:
   flutter_timetable_firebase:
     path: ../
   flutter_timetable_interface:
-    path: ../../flutter_timetable_interface
+    hosted: https://forgejo.internal.iconica.nl/api/packages/internal/pub
+    version: ^2.0.0
   hooks_riverpod: ^2.4.9
   
 
