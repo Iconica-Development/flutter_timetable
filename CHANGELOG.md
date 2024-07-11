@@ -30,3 +30,7 @@
 ## [1.4.0] - 13 November 2023
 
 * Add the option for sorting the blocks by their id.
+
+## [2.0.0] - 11 July 2024
+
+* Rename main entry point to flutter_timetable
