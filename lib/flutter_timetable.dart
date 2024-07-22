@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: BSD-3-Clause
 
-library timetable;
+library flutter_timetable;
 
 export 'src/models/table_theme.dart';
 export 'src/models/time_block.dart';

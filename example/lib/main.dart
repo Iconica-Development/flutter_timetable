@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: BSD-3-Clause
 
 import 'package:flutter/material.dart';
-import 'package:flutter_timetable/timetable.dart';
+import 'package:flutter_timetable/flutter_timetable.dart';
 
 void main() {
   runApp(const MaterialApp(home: TimetableDemo()));
